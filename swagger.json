@@ -1,0 +1,1368 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/": {
+            "get": {
+                "operationId": "AppController_healthcheck",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/modulos": {
+            "post": {
+                "operationId": "ModuloController_post",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ModuloDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "modulos"
+                ]
+            },
+            "get": {
+                "operationId": "ModuloController_getAll",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "required": false,
+                        "in": "query",
+                        "description": " query-Filter.e.g.col1:v1,col2:v2… ",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fields",
+                        "required": false,
+                        "in": "query",
+                        "description": "fields - Fields returned. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortby",
+                        "required": false,
+                        "in": "query",
+                        "description": "sortby - Sorted-by fields. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "order",
+                        "required": false,
+                        "in": "query",
+                        "description": "order - Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "limit - Limit the size of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "offset - Start position of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "populate",
+                        "required": false,
+                        "in": "query",
+                        "description": "populate - show subqueries. Must be a boolean",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "modulos"
+                ]
+            }
+        },
+        "/modulos/{id}": {
+            "get": {
+                "operationId": "ModuloController_getById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "modulos"
+                ]
+            },
+            "put": {
+                "operationId": "ModuloController_put",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ModuloDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "modulos"
+                ]
+            },
+            "delete": {
+                "operationId": "ModuloController_delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "modulos"
+                ]
+            }
+        },
+        "/formularios": {
+            "post": {
+                "operationId": "FormularioController_post",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FormularioDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "formularios"
+                ]
+            },
+            "get": {
+                "operationId": "FormularioController_getAll",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "required": false,
+                        "in": "query",
+                        "description": " query-Filter.e.g.col1:v1,col2:v2… ",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fields",
+                        "required": false,
+                        "in": "query",
+                        "description": "fields - Fields returned. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortby",
+                        "required": false,
+                        "in": "query",
+                        "description": "sortby - Sorted-by fields. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "order",
+                        "required": false,
+                        "in": "query",
+                        "description": "order - Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "limit - Limit the size of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "offset - Start position of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "populate",
+                        "required": false,
+                        "in": "query",
+                        "description": "populate - show subqueries. Must be a boolean",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "formularios"
+                ]
+            }
+        },
+        "/formularios/{id}": {
+            "get": {
+                "operationId": "FormularioController_getById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "formularios"
+                ]
+            },
+            "put": {
+                "operationId": "FormularioController_put",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FormularioDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "formularios"
+                ]
+            },
+            "delete": {
+                "operationId": "FormularioController_delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "formularios"
+                ]
+            }
+        },
+        "/modal-alertas": {
+            "post": {
+                "operationId": "ModalAlertaController_post",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ModalAlertaDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "modal-alertas"
+                ]
+            },
+            "get": {
+                "operationId": "ModalAlertaController_getAll",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "required": false,
+                        "in": "query",
+                        "description": " query-Filter.e.g.col1:v1,col2:v2… ",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fields",
+                        "required": false,
+                        "in": "query",
+                        "description": "fields - Fields returned. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortby",
+                        "required": false,
+                        "in": "query",
+                        "description": "sortby - Sorted-by fields. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "order",
+                        "required": false,
+                        "in": "query",
+                        "description": "order - Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "limit - Limit the size of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "offset - Start position of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "populate",
+                        "required": false,
+                        "in": "query",
+                        "description": "populate - show subqueries. Must be a boolean",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "modal-alertas"
+                ]
+            }
+        },
+        "/modal-alertas/{id}": {
+            "get": {
+                "operationId": "ModalAlertaController_getById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "modal-alertas"
+                ]
+            },
+            "put": {
+                "operationId": "ModalAlertaController_put",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ModalAlertaDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "modal-alertas"
+                ]
+            },
+            "delete": {
+                "operationId": "ModalAlertaController_delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "modal-alertas"
+                ]
+            }
+        },
+        "/secciones": {
+            "post": {
+                "operationId": "SeccionController_post",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SeccionDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "secciones"
+                ]
+            },
+            "get": {
+                "operationId": "SeccionController_getAll",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "required": false,
+                        "in": "query",
+                        "description": " query-Filter.e.g.col1:v1,col2:v2… ",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fields",
+                        "required": false,
+                        "in": "query",
+                        "description": "fields - Fields returned. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortby",
+                        "required": false,
+                        "in": "query",
+                        "description": "sortby - Sorted-by fields. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "order",
+                        "required": false,
+                        "in": "query",
+                        "description": "order - Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "limit - Limit the size of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "offset - Start position of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "populate",
+                        "required": false,
+                        "in": "query",
+                        "description": "populate - show subqueries. Must be a boolean",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "secciones"
+                ]
+            }
+        },
+        "/secciones/{id}": {
+            "get": {
+                "operationId": "SeccionController_getById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "secciones"
+                ]
+            },
+            "put": {
+                "operationId": "SeccionController_put",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SeccionDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "secciones"
+                ]
+            },
+            "delete": {
+                "operationId": "SeccionController_delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "secciones"
+                ]
+            }
+        },
+        "/elementos-html": {
+            "post": {
+                "operationId": "ElementoHtmlController_post",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ElementoHtmlDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "elementos-html"
+                ]
+            },
+            "get": {
+                "operationId": "ElementoHtmlController_getAll",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "required": false,
+                        "in": "query",
+                        "description": " query-Filter.e.g.col1:v1,col2:v2… ",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fields",
+                        "required": false,
+                        "in": "query",
+                        "description": "fields - Fields returned. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortby",
+                        "required": false,
+                        "in": "query",
+                        "description": "sortby - Sorted-by fields. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "order",
+                        "required": false,
+                        "in": "query",
+                        "description": "order - Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "limit - Limit the size of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "offset - Start position of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "populate",
+                        "required": false,
+                        "in": "query",
+                        "description": "populate - show subqueries. Must be a boolean",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "elementos-html"
+                ]
+            }
+        },
+        "/elementos-html/{id}": {
+            "get": {
+                "operationId": "ElementoHtmlController_getById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "elementos-html"
+                ]
+            },
+            "put": {
+                "operationId": "ElementoHtmlController_put",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ElementoHtmlDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "elementos-html"
+                ]
+            },
+            "delete": {
+                "operationId": "ElementoHtmlController_delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "elementos-html"
+                ]
+            }
+        },
+        "/elementos-personalizados": {
+            "post": {
+                "operationId": "ElementoPersonalizadoController_post",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ElementoPersonalizadoDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "elementos-personalizados"
+                ]
+            },
+            "get": {
+                "operationId": "ElementoPersonalizadoController_getAll",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "required": false,
+                        "in": "query",
+                        "description": " query-Filter.e.g.col1:v1,col2:v2… ",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fields",
+                        "required": false,
+                        "in": "query",
+                        "description": "fields - Fields returned. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortby",
+                        "required": false,
+                        "in": "query",
+                        "description": "sortby - Sorted-by fields. e.g. col1,col2 …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "order",
+                        "required": false,
+                        "in": "query",
+                        "description": "order - Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc …",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "limit - Limit the size of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "offset - Start position of result set. Must be an integer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "populate",
+                        "required": false,
+                        "in": "query",
+                        "description": "populate - show subqueries. Must be a boolean",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "elementos-personalizados"
+                ]
+            }
+        },
+        "/elementos-personalizados/{id}": {
+            "get": {
+                "operationId": "ElementoPersonalizadoController_getById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "elementos-personalizados"
+                ]
+            },
+            "put": {
+                "operationId": "ElementoPersonalizadoController_put",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ElementoPersonalizadoDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "elementos-personalizados"
+                ]
+            },
+            "delete": {
+                "operationId": "ElementoPersonalizadoController_delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "elementos-personalizados"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "plantillas_formularios_dinamicos_crud",
+        "description": "API CRUD para la gestion de plantillas para la creacion de formularios dinamicos",
+        "version": "1.0",
+        "contact": {}
+    },
+    "tags": [],
+    "servers": [],
+    "components": {
+        "schemas": {
+            "ModuloDto": {
+                "type": "object",
+                "properties": {
+                    "nombre": {
+                        "type": "string"
+                    },
+                    "descripcion": {
+                        "type": "string"
+                    },
+                    "sistema_id": {
+                        "type": "number"
+                    },
+                    "activo": {
+                        "type": "boolean"
+                    },
+                    "fecha_creacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "fecha_modificacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nombre",
+                    "descripcion",
+                    "sistema_id",
+                    "activo",
+                    "fecha_creacion",
+                    "fecha_modificacion"
+                ]
+            },
+            "FormularioDto": {
+                "type": "object",
+                "properties": {
+                    "nombre": {
+                        "type": "string"
+                    },
+                    "descripcion": {
+                        "type": "string"
+                    },
+                    "version": {
+                        "type": "number"
+                    },
+                    "version_actual": {
+                        "type": "boolean"
+                    },
+                    "creado_por_id": {
+                        "type": "number"
+                    },
+                    "modificado_por_id": {
+                        "type": "number"
+                    },
+                    "modulo_id": {
+                        "type": "string"
+                    },
+                    "traduccion": {
+                        "type": "boolean"
+                    },
+                    "label": {
+                        "type": "object"
+                    },
+                    "activo": {
+                        "type": "boolean"
+                    },
+                    "fecha_creacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "fecha_modificacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nombre",
+                    "descripcion",
+                    "version",
+                    "version_actual",
+                    "creado_por_id",
+                    "modificado_por_id",
+                    "modulo_id",
+                    "traduccion",
+                    "label",
+                    "activo",
+                    "fecha_creacion",
+                    "fecha_modificacion"
+                ]
+            },
+            "ModalAlertaDto": {
+                "type": "object",
+                "properties": {
+                    "titulo": {
+                        "type": "string"
+                    },
+                    "descripcion": {
+                        "type": "string"
+                    },
+                    "formulario_id": {
+                        "type": "string"
+                    },
+                    "titulo_boton_principal": {
+                        "type": "string"
+                    },
+                    "titulo_boton_secundario": {
+                        "type": "string"
+                    },
+                    "tipo_id": {
+                        "type": "number"
+                    },
+                    "activo": {
+                        "type": "boolean"
+                    },
+                    "fecha_creacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "fecha_modificacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "titulo",
+                    "descripcion",
+                    "formulario_id",
+                    "titulo_boton_principal",
+                    "titulo_boton_secundario",
+                    "tipo_id",
+                    "activo",
+                    "fecha_creacion",
+                    "fecha_modificacion"
+                ]
+            },
+            "SeccionDto": {
+                "type": "object",
+                "properties": {
+                    "nombre": {
+                        "type": "string"
+                    },
+                    "descripcion": {
+                        "type": "string"
+                    },
+                    "formulario_id": {
+                        "type": "string"
+                    },
+                    "padre_id": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "object"
+                    },
+                    "activo": {
+                        "type": "boolean"
+                    },
+                    "fecha_creacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "fecha_modificacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nombre",
+                    "descripcion",
+                    "formulario_id",
+                    "padre_id",
+                    "label",
+                    "activo",
+                    "fecha_creacion",
+                    "fecha_modificacion"
+                ]
+            },
+            "ElementoHtmlDto": {
+                "type": "object",
+                "properties": {
+                    "nombre": {
+                        "type": "string"
+                    },
+                    "descripcion": {
+                        "type": "string"
+                    },
+                    "tipo_id": {
+                        "type": "number"
+                    },
+                    "tipo_dato_id": {
+                        "type": "number"
+                    },
+                    "validadores": {
+                        "type": "object"
+                    },
+                    "parametros": {
+                        "type": "object"
+                    },
+                    "activo": {
+                        "type": "boolean"
+                    },
+                    "fecha_creacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "fecha_modificacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nombre",
+                    "descripcion",
+                    "tipo_id",
+                    "tipo_dato_id",
+                    "validadores",
+                    "parametros",
+                    "activo",
+                    "fecha_creacion",
+                    "fecha_modificacion"
+                ]
+            },
+            "ElementoPersonalizadoDto": {
+                "type": "object",
+                "properties": {
+                    "nombre": {
+                        "type": "string"
+                    },
+                    "descripcion": {
+                        "type": "string"
+                    },
+                    "seccion_id": {
+                        "type": "string"
+                    },
+                    "elemento_html_id": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "object"
+                    },
+                    "deshabilitado": {
+                        "type": "boolean"
+                    },
+                    "solo_lectura": {
+                        "type": "boolean"
+                    },
+                    "placeholder": {
+                        "type": "object"
+                    },
+                    "requerido": {
+                        "type": "boolean"
+                    },
+                    "validadores_personalizados": {
+                        "type": "object"
+                    },
+                    "parametros_personalizados": {
+                        "type": "object"
+                    },
+                    "dependencia": {
+                        "type": "object"
+                    },
+                    "activo": {
+                        "type": "boolean"
+                    },
+                    "fecha_creacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "fecha_modificacion": {
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nombre",
+                    "descripcion",
+                    "seccion_id",
+                    "elemento_html_id",
+                    "label",
+                    "deshabilitado",
+                    "solo_lectura",
+                    "placeholder",
+                    "requerido",
+                    "validadores_personalizados",
+                    "parametros_personalizados",
+                    "dependencia",
+                    "activo",
+                    "fecha_creacion",
+                    "fecha_modificacion"
+                ]
+            }
+        }
+    }
+}
