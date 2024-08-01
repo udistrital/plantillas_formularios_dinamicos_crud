@@ -1061,6 +1061,59 @@
                     "elementos-personalizados"
                 ]
             }
+        },
+        "/plantillas": {
+            "post": {
+                "operationId": "PlantillaController_post",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "plantillas"
+                ]
+            },
+            "get": {
+                "operationId": "PlantillaController_get",
+                "parameters": [
+                    {
+                        "name": "modulo_id",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "version",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "plantillas"
+                ]
+            }
         }
     },
     "info": {
@@ -1362,6 +1415,10 @@
                     "fecha_creacion",
                     "fecha_modificacion"
                 ]
+            },
+            "Object": {
+                "type": "object",
+                "properties": {}
             }
         }
     }

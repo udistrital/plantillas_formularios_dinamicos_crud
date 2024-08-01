@@ -1,4 +1,5 @@
 import { FilterDto } from './filters.dto';
+import { Types } from 'mongoose';
 
 export class FiltersService {
   constructor(private readonly filterDto: FilterDto) {}
@@ -52,7 +53,16 @@ export class FiltersService {
               break;
           }
         } else {
-          queryObj[key[0]] = castValue(tup[1]);
+          if (key[0].endsWith('id')) {
+            queryObj[key[0]] = {
+              $in: [
+                tup[1],
+                Types.ObjectId.isValid(tup[1]) ? Types.ObjectId(tup[1]) : null,
+              ].filter(Boolean),
+            };
+          } else {
+            queryObj[key[0]] = castValue(tup[1]);
+          }
         }
       });
     }

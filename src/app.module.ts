@@ -12,12 +12,13 @@ import { ModalAlertaModule } from './modal-alerta/modal-alerta.module';
 import { SeccionModule } from './seccion/seccion.module';
 import { ElementoHtmlModule } from './elemento-html/elemento-html.module';
 import { ElementoPersonalizadoModule } from './elemento_personalizado/elemento_personalizado.module';
+import { PlantillaModule } from './plantilla/plantilla.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot(
-      `mongodb://${environment.USER}:${environment.PASS}@` +
-        `${environment.HOST}:${environment.PORT}/${environment.DB}?authSource=${environment.AUTH_DB}`,
+      `mongodb://${environment.PLANTILLAS_FORMULARIOS_DINAMICOS_USER}:${environment.PLANTILLAS_FORMULARIOS_DINAMICOS_PASS}@` +
+        `${environment.PLANTILLAS_FORMULARIOS_DINAMICOS_HOST}:${environment.PLANTILLAS_FORMULARIOS_DINAMICOS_PORT}/${environment.PLANTILLAS_FORMULARIOS_DINAMICOS_DB}?authSource=${environment.PLANTILLAS_FORMULARIOS_DINAMICOS_AUTH_DB}`,
       {
         useFindAndModify: false,
       },
@@ -28,6 +29,7 @@ import { ElementoPersonalizadoModule } from './elemento_personalizado/elemento_p
     SeccionModule,
     ElementoHtmlModule,
     ElementoPersonalizadoModule,
+    PlantillaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
