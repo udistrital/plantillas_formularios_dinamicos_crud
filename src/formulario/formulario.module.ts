@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Formulario, FormularioSchema } from './schemas/formulario.schema';
 import { FormularioService } from './formulario.service';
 import { FormularioController } from './formulario.controller';
-import { Modulo, ModuloSchema } from 'src/modulo/schemas/modulo.schema';
+import { Modulo, ModuloSchema } from '../modulo/schemas/modulo.schema';
 
 @Module({
   imports: [

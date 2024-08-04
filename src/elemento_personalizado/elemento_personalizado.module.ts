@@ -9,8 +9,8 @@ import { ElementoPersonalizadoController } from './elemento_personalizado.contro
 import {
   ElementoHtml,
   ElementoHtmlSchema,
-} from 'src/elemento-html/schemas/elemento-html.schema';
-import { Seccion, SeccionSchema } from 'src/seccion/schemas/seccion.schema';
+} from '../elemento-html/schemas/elemento-html.schema';
+import { Seccion, SeccionSchema } from '../seccion/schemas/seccion.schema';
 
 @Module({
   imports: [

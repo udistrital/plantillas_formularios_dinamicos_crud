@@ -50,13 +50,19 @@ npm install --save @nestjs/swagger swagger-ui-express
 ESPACIOS_ACADEMICOS_CRUD_HTTP_PORT=3000 ...
 ```
 
-## Ejecución Pruebas
+### Ejecución Pruebas
 
 Pruebas unitarias
-
 ```shell
-# En proceso...
+# Test
+npm test
+
+# Se ejecutará jest, validando los casos de prueba en los archivos .spec.ts
+
+npm test:cov
+# Validar la cobertura de las pruebas
 ```
+
 
 # Modelo de Datos
 

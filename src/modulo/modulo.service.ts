@@ -70,7 +70,7 @@ export class ModuloService {
       .findByIdAndUpdate(id, { activo: false }, { new: true })
       .exec();
     if (!deleted) {
-      throw new Error(`${id} no existe`);
+      throw new Error(`${id} doesn't exist`);
     }
     return deleted;
   }

@@ -1,8 +1,8 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-import { Seccion } from 'src/seccion/schemas/seccion.schema';
-import { ElementoHtml } from 'src/elemento-html/schemas/elemento-html.schema';
+import { Seccion } from '../../seccion/schemas/seccion.schema';
+import { ElementoHtml } from '../../elemento-html/schemas/elemento-html.schema';
 
 @Schema({ collection: 'elementos_personalizados' })
 export class ElementoPersonalizado extends Document {

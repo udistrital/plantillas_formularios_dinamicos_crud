@@ -6,7 +6,7 @@ import { SeccionController } from './seccion.controller';
 import {
   Formulario,
   FormularioSchema,
-} from 'src/formulario/schemas/formulario.schema';
+} from '../formulario/schemas/formulario.schema';
 
 @Module({
   imports: [

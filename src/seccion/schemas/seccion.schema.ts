@@ -1,7 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-import { Formulario } from 'src/formulario/schemas/formulario.schema';
+import { Formulario } from '../../formulario/schemas/formulario.schema';
 
 @Schema({ collection: 'secciones' })
 export class Seccion extends Document {
