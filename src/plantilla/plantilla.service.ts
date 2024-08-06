@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
 // Schemas
-import { Modulo } from 'src/modulo/schemas/modulo.schema';
+import { Modulo } from '../modulo/schemas/modulo.schema';
 import { Formulario } from '../formulario/schemas/formulario.schema';
 import { Seccion } from '../seccion/schemas/seccion.schema';
 import { ElementoPersonalizado } from '../elemento_personalizado/schemas/elemento_personalizado.schema';
@@ -16,8 +16,8 @@ import { ElementoPersonalizadoDto } from '../elemento_personalizado/dto/elemento
 
 // Services
 import { FormularioService } from '../formulario/formulario.service';
-import { SeccionService } from 'src/seccion/seccion.service';
-import { ElementoPersonalizadoService } from 'src/elemento_personalizado/elemento_personalizado.service';
+import { SeccionService } from '../seccion/seccion.service';
+import { ElementoPersonalizadoService } from '../elemento_personalizado/elemento_personalizado.service';
 
 @Injectable()
 export class PlantillaService {
@@ -200,6 +200,7 @@ export class PlantillaService {
       const elementos = elementosPersonalizados
         .filter((elemento) => elemento.seccion_id.toString() === seccionId)
         .map((elemento) => ({
+          _id: elemento._id,
           nombre: elemento.nombre,
           descripcion: elemento.descripcion,
           elemento_html: elemento.elemento_html_id, // Elemento HTML poblado
@@ -218,6 +219,7 @@ export class PlantillaService {
         .filter((subSeccion) => subSeccion !== null);
 
       return {
+        _id: seccion._id,
         nombre: seccion.nombre,
         descripcion: seccion.descripcion,
         label: seccion.label,
@@ -232,12 +234,16 @@ export class PlantillaService {
     const formularioJson = {
       modulo_id: modulo_id,
       formulario: {
+        _id: formulario._id,
         nombre: formulario.nombre,
         descripcion: formulario.descripcion,
         version: formulario.version,
         creado_por_id: formulario.creado_por_id,
         traduccion: formulario.traduccion,
         label: formulario.label,
+        activo: formulario.activo,
+        fecha_creacion: formulario.fecha_creacion,
+        fecha_modificacion: formulario.fecha_modificacion,
         seccion: secciones
           .filter((seccion) => !seccion.padre_id) // Filtrar secciones sin padre
           .map((seccion) => buildHierarchy(seccion._id.toString()))

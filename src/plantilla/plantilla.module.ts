@@ -2,14 +2,14 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PlantillaService } from './plantilla.service';
 import { PlantillaController } from './plantilla.controller';
-import { Modulo, ModuloSchema } from 'src/modulo/schemas/modulo.schema';
+import { Modulo, ModuloSchema } from '../modulo/schemas/modulo.schema';
 import {
   Formulario,
   FormularioSchema,
 } from '../formulario/schemas/formulario.schema';
-import { FormularioModule } from 'src/formulario/formulario.module';
-import { SeccionModule } from 'src/seccion/seccion.module';
-import { ElementoPersonalizadoModule } from 'src/elemento_personalizado/elemento_personalizado.module';
+import { FormularioModule } from '../formulario/formulario.module';
+import { SeccionModule } from '../seccion/seccion.module';
+import { ElementoPersonalizadoModule } from '../elemento_personalizado/elemento_personalizado.module';
 import { Seccion, SeccionSchema } from '../seccion/schemas/seccion.schema';
 import {
   ElementoPersonalizado,

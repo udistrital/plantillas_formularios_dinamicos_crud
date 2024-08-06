@@ -1,7 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-import { Formulario } from 'src/formulario/schemas/formulario.schema';
+import { Formulario } from '../../formulario/schemas/formulario.schema';
 
 @Schema({ collection: 'modal_alertas' })
 export class ModalAlerta extends Document {

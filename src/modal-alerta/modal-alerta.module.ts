@@ -6,7 +6,8 @@ import { ModalAlertaController } from './modal-alerta.controller';
 import {
   Formulario,
   FormularioSchema,
-} from 'src/formulario/schemas/formulario.schema';
+} from '../formulario/schemas/formulario.schema';
+import { FormularioModule } from '../formulario/formulario.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import {
       { name: ModalAlerta.name, schema: ModalAlertaSchema },
       { name: Formulario.name, schema: FormularioSchema },
     ]),
+    FormularioModule,
   ],
   providers: [ModalAlertaService],
   controllers: [ModalAlertaController],

@@ -2,14 +2,19 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  healthcheck(): object {
-    return {
-      Status: 'Ok',
-      checkCount: check.count++,
-    };
-  }
-}
+  counter = 0;
 
-export class check {
-  static count = 0;
+  healthCheck() {
+    try {
+      return {
+        Status: 'ok',
+        checkCount: this.counter++,
+      };
+    } catch (error) {
+      return {
+        Status: 'error',
+        error: error.message,
+      };
+    }
+  }
 }
