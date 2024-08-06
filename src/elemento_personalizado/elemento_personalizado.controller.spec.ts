@@ -9,7 +9,9 @@ describe('ElementoPersonalizadoController', () => {
       controllers: [ElementoPersonalizadoController],
     }).compile();
 
-    controller = module.get<ElementoPersonalizadoController>(ElementoPersonalizadoController);
+    controller = module.get<ElementoPersonalizadoController>(
+      ElementoPersonalizadoController,
+    );
   });
 
   it('should be defined', () => {

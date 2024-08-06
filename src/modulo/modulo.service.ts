@@ -46,7 +46,7 @@ export class ModuloService {
   async getById(id: string): Promise<Modulo> {
     const modulo = await this.moduloModel.findById(id).exec();
     if (!modulo) {
-      throw new Error(`${id} no existe`);
+      throw new Error(`${id} doesn't exist`);
     }
     return modulo;
   }
