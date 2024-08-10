@@ -35,11 +35,14 @@ export class ModalAlertaService {
   }
 
   async post(modalAlertaDto: ModalAlertaDto): Promise<ModalAlerta> {
-    const modalAlerta = new this.modalAlertaModel(modalAlertaDto);
-    modalAlerta.fecha_creacion = new Date();
-    modalAlerta.fecha_modificacion = modalAlerta.fecha_creacion;
+    const fecha = new Date();
+    const modalAlertaData = {
+      ...modalAlertaDto,
+      fecha_creacion: fecha,
+      fecha_modificacion: fecha,
+    };
     await this.checkRelated(modalAlertaDto);
-    return await modalAlerta.save();
+    return await this.modalAlertaModel.create(modalAlertaData);
   }
 
   async getAll(filterDto: FilterDto): Promise<ModalAlerta[]> {

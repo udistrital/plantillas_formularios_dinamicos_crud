@@ -20,10 +20,13 @@ export class ElementoHtmlService {
   }
 
   async post(elementoHtmlDto: ElementoHtmlDto): Promise<ElementoHtml> {
-    const elementoHtml = new this.elementoHtmlModel(elementoHtmlDto);
-    elementoHtml.fecha_creacion = new Date();
-    elementoHtml.fecha_modificacion = elementoHtml.fecha_creacion;
-    return await elementoHtml.save();
+    const fecha = new Date();
+    const elementoHtmlData = {
+      ...elementoHtmlDto,
+      fecha_creacion: fecha,
+      fecha_modificacion: fecha,
+    };
+    return await this.elementoHtmlModel.create(elementoHtmlData);
   }
 
   async getAll(filterDto: FilterDto): Promise<ElementoHtml[]> {

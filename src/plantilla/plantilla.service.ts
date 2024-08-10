@@ -26,14 +26,14 @@ export class PlantillaService {
     private readonly ModuloModel: Model<Modulo>,
     @InjectModel(Formulario.name)
     private readonly formularioModel: Model<Formulario>,
+    private readonly formularioService: FormularioService,
     @InjectModel(Seccion.name) private readonly seccionModel: Model<Seccion>,
+    private readonly seccionService: SeccionService,
     @InjectModel(ElementoPersonalizado.name)
     private readonly elementoPersonalizadoModel: Model<ElementoPersonalizado>,
+    private readonly elementoPersonalizadoService: ElementoPersonalizadoService,
     @InjectModel(ElementoHtml.name)
     private readonly elementoHtmlModel: Model<ElementoHtml>,
-    private readonly formularioService: FormularioService,
-    private readonly seccionService: SeccionService,
-    private readonly elementoPersonalizadoService: ElementoPersonalizadoService,
   ) {}
 
   async almacenarFormulario(template: any): Promise<any> {
