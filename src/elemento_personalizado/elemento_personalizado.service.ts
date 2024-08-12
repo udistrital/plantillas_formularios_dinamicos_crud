@@ -51,14 +51,16 @@ export class ElementoPersonalizadoService {
   async post(
     elementoPersonalizadoDto: ElementoPersonalizadoDto,
   ): Promise<ElementoPersonalizado> {
-    const elementoPersonalizado = new this.elementoPersonalizadoModel(
-      elementoPersonalizadoDto,
+    const fecha = new Date();
+    const elementoPersonalizadoData = {
+      ...elementoPersonalizadoDto,
+      fecha_creacion: fecha,
+      fecha_modificacion: fecha,
+    };
+    await this.checkRelated(elementoPersonalizadoDto); // Asumiendo que checkRelated también es aplicable aquí
+    return await this.elementoPersonalizadoModel.create(
+      elementoPersonalizadoData,
     );
-    elementoPersonalizado.fecha_creacion = new Date();
-    elementoPersonalizado.fecha_modificacion =
-      elementoPersonalizado.fecha_creacion;
-    await this.checkRelated(elementoPersonalizadoDto);
-    return await elementoPersonalizado.save();
   }
 
   async getAll(filterDto: FilterDto): Promise<ElementoPersonalizado[]> {

@@ -43,11 +43,14 @@ export class SeccionService {
   }
 
   async post(seccionDto: SeccionDto): Promise<Seccion> {
-    const seccion = new this.seccionModel(seccionDto);
-    seccion.fecha_creacion = new Date();
-    seccion.fecha_modificacion = seccion.fecha_creacion;
+    const fecha = new Date();
+    const seccionData = {
+      ...seccionDto,
+      fecha_creacion: fecha,
+      fecha_modificacion: fecha,
+    };
     await this.checkRelated(seccionDto);
-    return await seccion.save();
+    return await this.seccionModel.create(seccionData);
   }
 
   async getAll(filterDto: FilterDto): Promise<Seccion[]> {

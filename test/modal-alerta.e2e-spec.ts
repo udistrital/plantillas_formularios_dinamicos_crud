@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
-describe('ModuloController (e2e)', () => {
+describe('ModalAlertaController (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -15,24 +15,10 @@ describe('ModuloController (e2e)', () => {
     await app.init();
   });
 
-  describe('/modulos (GET)', () => {
-    it('should return all modulos', async () => {
-      const newModulo = {
-        nombre: 'Modulo Test',
-        descripcion: 'Descripción del modulo test',
-        sistema_id: 1,
-        activo: true,
-        fecha_creacion: new Date().toISOString(),
-        fecha_modificacion: new Date().toISOString(),
-      };
-
-      await request(app.getHttpServer())
-        .post('/modulos')
-        .send(newModulo)
-        .expect(201);
-
+  describe('/modal-alertas (GET)', () => {
+    it('should return all modal alertas', async () => {
       return request(app.getHttpServer())
-        .get('/modulos')
+        .get('/modal-alertas')
         .expect(200)
         .expect((res) => {
           expect(res.body).toHaveProperty('Success', true);

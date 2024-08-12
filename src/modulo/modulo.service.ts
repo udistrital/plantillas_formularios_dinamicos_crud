@@ -20,10 +20,13 @@ export class ModuloService {
   }
 
   async post(moduloDto: ModuloDto): Promise<Modulo> {
-    const modulo = new this.moduloModel(moduloDto);
-    modulo.fecha_creacion = new Date();
-    modulo.fecha_modificacion = modulo.fecha_creacion;
-    return await modulo.save();
+    const moduloData = {
+      ...moduloDto,
+      fecha_creacion: new Date(),
+      fecha_modificacion: new Date(),
+    };
+
+    return await this.moduloModel.create(moduloData);
   }
 
   async getAll(filterDto: FilterDto): Promise<Modulo[]> {

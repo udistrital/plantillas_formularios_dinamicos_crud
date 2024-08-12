@@ -34,11 +34,14 @@ export class FormularioService {
   }
 
   async post(formularioDto: FormularioDto): Promise<Formulario> {
-    const formulario = new this.formularioModel(formularioDto);
-    formulario.fecha_creacion = new Date();
-    formulario.fecha_modificacion = formulario.fecha_creacion;
+    const fecha = new Date();
+    const formularioData = {
+      ...formularioDto,
+      fecha_creacion: fecha,
+      fecha_modificacion: fecha,
+    };
     await this.checkRelated(formularioDto);
-    return await formulario.save();
+    return await this.formularioModel.create(formularioData);
   }
 
   async getAll(filterDto: FilterDto): Promise<Formulario[]> {
