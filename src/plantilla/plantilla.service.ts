@@ -36,7 +36,7 @@ export class PlantillaService {
     private readonly elementoHtmlModel: Model<ElementoHtml>,
   ) {}
 
-  async almacenarFormulario(template: any): Promise<any> {
+  async createTemplate(template: any): Promise<any> {
     if (typeof template !== 'object' || template === null) {
       throw new TypeError('Expected an object for template');
     }
@@ -252,5 +252,74 @@ export class PlantillaService {
     };
 
     return formularioJson;
+  }
+
+  async deleteTemplate(modulo_id: string, version: number): Promise<string> {
+    // Encontrar el formulario a eliminar basado en el modulo_id y la versión
+    const formulario = await this.formularioModel
+      .findOne({ modulo_id: new Types.ObjectId(modulo_id), version })
+      .exec();
+
+    if (!formulario) {
+      throw new NotFoundException(
+        `Form with modulo_id ${modulo_id} and version ${version} not found`,
+      );
+    }
+
+    const isCurrentVersion = formulario.version_actual;
+
+    // Eliminación lógica del formulario
+    await this.formularioService.delete(formulario._id.toString());
+
+    // Secciones asociadas al formulario
+    const secciones = await this.seccionModel
+      .find({ formulario_id: formulario._id })
+      .exec();
+
+    for (const seccion of secciones) {
+      // Eliminación lógica de cada sección
+      await this.seccionService.delete(seccion._id.toString());
+
+      //Elementos personalizados asociados a la sección
+      const elementosPersonalizados = await this.elementoPersonalizadoModel
+        .find({ seccion_id: seccion._id })
+        .exec();
+
+      for (const elemento of elementosPersonalizados) {
+        // Eliminación lógica de cada elemento personalizado
+        await this.elementoPersonalizadoService.delete(elemento._id.toString());
+      }
+
+      console.log(isCurrentVersion);
+      // Si el formulario es la versión actual, cambia a false y actualiza la nueva versión actual
+      if (isCurrentVersion) {
+        await this.changeCurrentVersion(modulo_id, formulario._id);
+      }
+    }
+
+    return `Template with modulo_id ${modulo_id} and version ${version} deleted successfully`;
+  }
+
+  private async changeCurrentVersion(
+    modulo_id: string,
+    formulario_id: Types.ObjectId,
+  ) {
+    await this.formularioModel.updateOne(
+      { _id: formulario_id },
+      { version_actual: false },
+    );
+
+    // Buscar la última versión activa disponible
+    const lastActiveFormulario = await this.formularioModel
+      .findOne({ modulo_id: new Types.ObjectId(modulo_id), activo: true })
+      .sort({ version: -1 }) // Ordenar por versión descendente para obtener la última versión
+      .exec();
+
+    if (lastActiveFormulario) {
+      await this.formularioModel.updateOne(
+        { _id: lastActiveFormulario._id },
+        { version_actual: true },
+      );
+    }
   }
 }

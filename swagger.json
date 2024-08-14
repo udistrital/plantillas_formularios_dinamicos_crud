@@ -1113,6 +1113,35 @@
         "tags": [
           "plantillas"
         ]
+      },
+      "delete": {
+        "operationId": "PlantillaController_deleteTemplate",
+        "parameters": [
+          {
+            "name": "modulo_id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "plantillas"
+        ]
       }
     }
   },

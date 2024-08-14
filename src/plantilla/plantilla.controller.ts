@@ -5,6 +5,7 @@ import {
   Body,
   HttpStatus,
   Get,
+  Delete,
   Query,
 } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiQuery } from '@nestjs/swagger';
@@ -18,25 +19,23 @@ export class PlantillaController {
   @Post()
   @ApiBody({ type: Object })
   async post(@Res() res, @Body() template: object) {
-    this.plantillaService
-      .almacenarFormulario(template)
-      .then((formulario) => {
-        res.status(HttpStatus.CREATED).json({
-          Success: true,
-          Status: HttpStatus.CREATED,
-          Message: 'Registration successful',
-          Data: formulario,
-        });
-      })
-      .catch((error) => {
-        res.status(HttpStatus.BAD_REQUEST).json({
-          Success: false,
-          Status: HttpStatus.BAD_REQUEST,
-          Message:
-            'Error service Post: The request contains an incorrect data type or an invalid parameter',
-          Data: error.message,
-        });
+    try {
+      const formulario = await this.plantillaService.createTemplate(template);
+      res.status(HttpStatus.CREATED).json({
+        Success: true,
+        Status: HttpStatus.CREATED,
+        Message: 'Registration successful',
+        Data: formulario,
       });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        Success: false,
+        Status: HttpStatus.BAD_REQUEST,
+        Message:
+          'Error service Post: The request contains an incorrect data type or an invalid parameter',
+        Data: error.message,
+      });
+    }
   }
 
   @Get()
@@ -47,23 +46,54 @@ export class PlantillaController {
     @Query('modulo_id') modulo_id: string,
     @Query('version') version?: number,
   ) {
-    this.plantillaService
-      .getTemplate(modulo_id, version)
-      .then((template) => {
-        res.status(HttpStatus.OK).json({
-          Success: true,
-          Status: HttpStatus.OK,
-          Message: 'Template retrieved successfully',
-          Data: template,
-        });
-      })
-      .catch((error) => {
-        res.status(HttpStatus.BAD_REQUEST).json({
-          Success: false,
-          Status: HttpStatus.BAD_REQUEST,
-          Message: 'Error retrieving template',
-          Data: error.message,
-        });
+    try {
+      const template = await this.plantillaService.getTemplate(
+        modulo_id,
+        version,
+      );
+      res.status(HttpStatus.OK).json({
+        Success: true,
+        Status: HttpStatus.OK,
+        Message: 'Request successful',
+        Data: template,
       });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        Success: false,
+        Status: HttpStatus.BAD_REQUEST,
+        Message:
+          'Error service GetAll: The request contains an incorrect parameter or no record exists',
+        Data: error.message,
+      });
+    }
+  }
+
+  @Delete()
+  @ApiQuery({ name: 'modulo_id', required: true, type: String })
+  @ApiQuery({ name: 'version', required: true, type: Number })
+  async deleteTemplate(
+    @Res() res,
+    @Query('modulo_id') modulo_id: string,
+    @Query('version') version: number,
+  ) {
+    try {
+      const data = await this.plantillaService.deleteTemplate(
+        modulo_id,
+        version,
+      );
+      res.status(HttpStatus.OK).json({
+        Success: true,
+        Status: HttpStatus.OK,
+        Message: 'Template deleted successfully',
+        Data: data,
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        Success: false,
+        Status: HttpStatus.BAD_REQUEST,
+        Message: 'Error service Delete: Request contains incorrect parameter',
+        Data: error.message,
+      });
+    }
   }
 }
