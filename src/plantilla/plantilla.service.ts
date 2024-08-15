@@ -45,24 +45,22 @@ export class PlantillaService {
     let newFormulario;
     const seccionIds = [];
     const elementoIds = [];
+    let version;
 
     try {
       const modulo = await this.findModulo(modulo_id);
 
-      const version = await this.updateExistingFormularios(modulo._id);
-
-      const formularioDto: FormularioDto = {
-        ...formulario,
-        version_actual: true,
-        activo: true,
-        modulo_id: modulo._id,
-        version,
-      };
-
       // Validación de todos los elementos HTML antes de crear el formulario
       await this.validateElementosHtml(formulario.seccion);
 
-      // Crear nuevo formulario
+      const formularioDto: FormularioDto = {
+        ...formulario,
+        version_actual: false,
+        activo: true,
+        modulo_id: modulo._id,
+        version: 0,
+      };
+
       newFormulario = await this.formularioService.post(formularioDto);
 
       // Crear secciones y elementos personalizados asociados al nuevo formulario
@@ -74,9 +72,17 @@ export class PlantillaService {
         elementoIds,
       );
 
+      version = await this.updateExistingFormularios(modulo._id);
+
+      // Asignar la nueva versión y marcar como versión actual
+      await this.formularioModel.findByIdAndUpdate(newFormulario._id, {
+        version_actual: true,
+        version,
+      });
+
       return { message: 'Template created successfully', version };
     } catch (error) {
-      // Rollback manual: eliminar registros incompletos
+      // Rollback, eliminar registros incompletos
       if (newFormulario) {
         await this.formularioModel.findByIdAndDelete(newFormulario._id);
       }
