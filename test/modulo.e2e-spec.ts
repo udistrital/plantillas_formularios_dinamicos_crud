@@ -17,20 +17,6 @@ describe('ModuloController (e2e)', () => {
 
   describe('/modulos (GET)', () => {
     it('should return all modulos', async () => {
-      const newModulo = {
-        nombre: 'Modulo Test',
-        descripcion: 'Descripción del modulo test',
-        sistema_id: 1,
-        activo: true,
-        fecha_creacion: new Date().toISOString(),
-        fecha_modificacion: new Date().toISOString(),
-      };
-
-      await request(app.getHttpServer())
-        .post('/modulos')
-        .send(newModulo)
-        .expect(201);
-
       return request(app.getHttpServer())
         .get('/modulos')
         .expect(200)
