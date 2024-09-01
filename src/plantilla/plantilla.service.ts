@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
 
 // Schemas
 import { Modulo } from '../modulo/schemas/modulo.schema';
@@ -38,32 +38,37 @@ export class PlantillaService {
 
   async createTemplate(template: any): Promise<any> {
     if (typeof template !== 'object' || template === null) {
-      throw new TypeError('Expected an object for template');
+      throw new TypeError('Se esperaba un objeto para la plantilla');
     }
 
     const { modulo_id, formulario } = template;
-    let newFormulario;
     const seccionIds = [];
     const elementoIds = [];
-    let version;
+    let newFormulario: Formulario;
+    let previousVersion: number | null = null;
 
     try {
+      // Encuentra el módulo y valida los elementos HTML
       const modulo = await this.findModulo(modulo_id);
-
-      // Validación de todos los elementos HTML antes de crear el formulario
       await this.validateElementosHtml(formulario.seccion);
 
+      // Actualizar versiones anteriores y obtener la nueva versión
+      const versionInfo = await this.updateExistingFormularios(modulo._id);
+      previousVersion = versionInfo.previousVersion;
+      const newVersion = versionInfo.newVersion;
+
+      // Crear el nuevo formulario
       const formularioDto: FormularioDto = {
         ...formulario,
-        version_actual: false,
+        version_actual: true,
         activo: true,
         modulo_id: modulo._id,
-        version: 0,
+        version: newVersion,
       };
 
       newFormulario = await this.formularioService.post(formularioDto);
 
-      // Crear secciones y elementos personalizados asociados al nuevo formulario
+      // Crear secciones y elementos personalizados
       await this.createSections(
         formulario.seccion,
         newFormulario._id,
@@ -72,32 +77,54 @@ export class PlantillaService {
         elementoIds,
       );
 
-      version = await this.updateExistingFormularios(modulo._id);
-
-      // Asignar la nueva versión y marcar como versión actual
-      await this.formularioModel.findByIdAndUpdate(newFormulario._id, {
-        version_actual: true,
-        version,
-      });
-
-      return { message: 'Template created successfully', version };
+      // Devuelve el mensaje de éxito
+      return { message: 'Plantilla creada exitosamente', version: newVersion };
     } catch (error) {
-      // Rollback, eliminar registros incompletos
+      // Manejar errores y restaurar estado si es necesario
       if (newFormulario) {
-        await this.formularioModel.findByIdAndDelete(newFormulario._id);
+        await this.deleteFormularioBD(newFormulario._id);
       }
 
       if (seccionIds.length > 0) {
-        await this.seccionModel.deleteMany({ _id: { $in: seccionIds } });
+        await this.deleteSeccionesBD(seccionIds);
       }
 
       if (elementoIds.length > 0) {
-        await this.elementoPersonalizadoModel.deleteMany({
-          _id: { $in: elementoIds },
-        });
+        await this.deleteElementosPersonalizadosBD(elementoIds);
       }
 
-      throw new Error(`Error creating the form: ${error.message}`);
+      // Restaurar la versión anterior si se había establecido
+      if (previousVersion !== null) {
+        await this.formularioModel.updateMany(
+          { modulo_id, version: previousVersion },
+          { version_actual: true },
+        );
+      }
+
+      throw new Error(`Error al crear el formulario: ${error.message}`);
+    }
+  }
+
+  // Funciones de eliminacion en BD por su ID
+  private async deleteFormularioBD(formularioId: ObjectId) {
+    if (formularioId) {
+      await this.formularioModel.findByIdAndDelete(formularioId);
+    }
+  }
+
+  // Función para eliminar secciones por sus IDs
+  private async deleteSeccionesBD(seccionIds: Array<ObjectId>) {
+    if (seccionIds.length > 0) {
+      await this.seccionModel.deleteMany({ _id: { $in: seccionIds } });
+    }
+  }
+
+  // Función para eliminar elementos personalizados por sus IDs
+  private async deleteElementosPersonalizadosBD(elementoIds: Array<ObjectId>) {
+    if (elementoIds.length > 0) {
+      await this.elementoPersonalizadoModel.deleteMany({
+        _id: { $in: elementoIds },
+      });
     }
   }
 
@@ -115,7 +142,7 @@ export class PlantillaService {
             .exec();
           if (!elementoHtml) {
             throw new NotFoundException(
-              `ElementoHtml with id ${elemento_html_id} not found`,
+              `ElementoHtml con id ${elemento_html_id} no encontrado`,
             );
           }
         }
@@ -190,25 +217,30 @@ export class PlantillaService {
   private async findModulo(modulo_id: string): Promise<Modulo> {
     const modulo = await this.ModuloModel.findOne({ _id: modulo_id }).exec();
     if (!modulo) {
-      throw new NotFoundException(`Module with id ${modulo_id} not found`);
+      throw new NotFoundException(`Módulo con id ${modulo_id} no encontrado`);
     }
     return modulo;
   }
 
   private async updateExistingFormularios(
     modulo_id: Types.ObjectId,
-  ): Promise<number> {
-    const existingFormularios = await this.formularioModel
-      .find({ modulo_id })
+  ): Promise<{ previousVersion: number | null; newVersion: number }> {
+    // Encuentra la versión máxima actual para el módulo
+    const maxVersionDoc = await this.formularioModel
+      .findOne({ modulo_id })
+      .sort({ version: -1 })
       .exec();
-    const version = existingFormularios.length + 1;
 
+    const previousVersion = maxVersionDoc ? maxVersionDoc.version : null;
+    const newVersion = (previousVersion ?? 0) + 1;
+
+    // Desactivar versiones actuales para el módulo
     await this.formularioModel.updateMany(
       { modulo_id, version_actual: true },
       { version_actual: false },
     );
 
-    return version;
+    return { previousVersion, newVersion };
   }
 
   async getTemplate(modulo_id: string, version?: number): Promise<any> {
@@ -228,7 +260,7 @@ export class PlantillaService {
 
     if (!formulario) {
       throw new NotFoundException(
-        `Form with modulo_id ${modulo_id} and version ${version} not found`,
+        `Formulario con modulo_id ${modulo_id} y versión ${version} no encontrado`,
       );
     }
 
@@ -310,6 +342,7 @@ export class PlantillaService {
     return formularioJson;
   }
 
+  //Realiza la eliminacion logica de todos los elementos relacionados a una plantilla
   async deleteTemplate(modulo_id: string, version: number): Promise<string> {
     // Encontrar el formulario a eliminar basado en el modulo_id y la versión
     const formulario = await this.formularioModel
@@ -318,64 +351,82 @@ export class PlantillaService {
 
     if (!formulario) {
       throw new NotFoundException(
-        `Form with modulo_id ${modulo_id} and version ${version} not found`,
+        `Formulario con modulo_id ${modulo_id} y versión ${version} no encontrado`,
       );
     }
 
     const isCurrentVersion = formulario.version_actual;
 
-    // Eliminación lógica del formulario
-    await this.formularioService.delete(formulario._id.toString());
+    // Eliminación lógica del formulario 
+    if (formulario) {
+      await this.disableFormulario(formulario._id);
+    }
 
-    // Secciones asociadas al formulario
-    const secciones = await this.seccionModel
+    // Obtener los IDs de las secciones asociadas al formulario
+    const seccionIds = await this.seccionModel
       .find({ formulario_id: formulario._id })
+      .distinct('_id')
       .exec();
 
-    for (const seccion of secciones) {
-      // Eliminación lógica de cada sección
-      await this.seccionService.delete(seccion._id.toString());
+    if (seccionIds.length > 0) {
+      // Eliminación lógica de los elementos personalizados asociados a las secciones
+      await this.elementoPersonalizadoModel.updateMany(
+        { seccion_id: { $in: seccionIds } },
+        { activo: false },
+      );
 
-      //Elementos personalizados asociados a la sección
-      const elementosPersonalizados = await this.elementoPersonalizadoModel
-        .find({ seccion_id: seccion._id })
-        .exec();
+      // Eliminación lógica de las secciones
+      await this.seccionModel.updateMany(
+        { _id: { $in: seccionIds } },
+        { activo: false },
+      );
+    }
 
-      for (const elemento of elementosPersonalizados) {
-        // Eliminación lógica de cada elemento personalizado
-        await this.elementoPersonalizadoService.delete(elemento._id.toString());
-      }
+    let responseMessage = `Plantilla con modulo_id ${modulo_id} y versión ${version} eliminada exitosamente`;
 
-      console.log(isCurrentVersion);
-      // Si el formulario es la versión actual, cambia a false y actualiza la nueva versión actual
-      if (isCurrentVersion) {
-        await this.changeCurrentVersion(modulo_id, formulario._id);
+    // Si el formulario es la versión actual, cambia a false y actualiza la nueva versión actual
+    if (isCurrentVersion) {
+      const lastActiveFormulario = await this.changeCurrentVersion(
+        modulo_id,
+        formulario._id,
+      );
+
+      if (lastActiveFormulario) {
+        responseMessage += `, la versión actual ha sido actualizada a la versión ${lastActiveFormulario.version}.`;
+      } else {
+        responseMessage += `. La última versión activa ha sido eliminada, y no quedan versiones activas.`;
       }
     }
 
-    return `Template with modulo_id ${modulo_id} and version ${version} deleted successfully`;
+    return responseMessage;
+  }
+
+  private async disableFormulario(formularioId : ObjectId) {
+    await this.formularioService.delete(formularioId.toString());
   }
 
   private async changeCurrentVersion(
     modulo_id: string,
     formulario_id: Types.ObjectId,
-  ) {
+  ): Promise<any> {
     await this.formularioModel.updateOne(
       { _id: formulario_id },
       { version_actual: false },
     );
 
-    // Buscar la última versión activa disponible
-    const lastActiveFormulario = await this.formularioModel
-      .findOne({ modulo_id: new Types.ObjectId(modulo_id), activo: true })
-      .sort({ version: -1 }) // Ordenar por versión descendente para obtener la última versión
-      .exec();
+    // Buscar y establecer la última versión activa
+    return this.findAndSetLastActiveFormulario(modulo_id);
+  }
 
-    if (lastActiveFormulario) {
-      await this.formularioModel.updateOne(
-        { _id: lastActiveFormulario._id },
+  private async findAndSetLastActiveFormulario(
+    modulo_id: string,
+  ): Promise<any> {
+    return this.formularioModel
+      .findOneAndUpdate(
+        { modulo_id: new Types.ObjectId(modulo_id), activo: true },
         { version_actual: true },
-      );
-    }
+        { sort: { version: -1 } },
+      )
+      .exec();
   }
 }
