@@ -42,44 +42,159 @@ export class PlantillaService {
     }
 
     const { modulo_id, formulario } = template;
-
-    const modulo = await this.findModulo(modulo_id);
-
-    const version = await this.updateExistingFormularios(modulo._id);
-
-    const formularioDto: FormularioDto = {
-      ...formulario,
-      version_actual: true,
-      activo: true,
-      modulo_id: modulo._id,
-      version,
-    };
+    let newFormulario;
+    const seccionIds = [];
+    const elementoIds = [];
+    let version;
 
     try {
-      // Crear nuevo formulario
-      const newFormulario = await this.formularioService.post(formularioDto);
+      const modulo = await this.findModulo(modulo_id);
+
+      // Validación de todos los elementos HTML antes de crear el formulario
+      await this.validateElementosHtml(formulario.seccion);
+
+      const formularioDto: FormularioDto = {
+        ...formulario,
+        version_actual: false,
+        activo: true,
+        modulo_id: modulo._id,
+        version: 0,
+      };
+
+      newFormulario = await this.formularioService.post(formularioDto);
 
       // Crear secciones y elementos personalizados asociados al nuevo formulario
-      await this.createSections(formulario.seccion, newFormulario._id, null);
+      await this.createSections(
+        formulario.seccion,
+        newFormulario._id,
+        null,
+        seccionIds,
+        elementoIds,
+      );
+
+      version = await this.updateExistingFormularios(modulo._id);
+
+      // Asignar la nueva versión y marcar como versión actual
+      await this.formularioModel.findByIdAndUpdate(newFormulario._id, {
+        version_actual: true,
+        version,
+      });
 
       return { message: 'Template created successfully', version };
     } catch (error) {
+      // Rollback, eliminar registros incompletos
+      if (newFormulario) {
+        await this.formularioModel.findByIdAndDelete(newFormulario._id);
+      }
+
+      if (seccionIds.length > 0) {
+        await this.seccionModel.deleteMany({ _id: { $in: seccionIds } });
+      }
+
+      if (elementoIds.length > 0) {
+        await this.elementoPersonalizadoModel.deleteMany({
+          _id: { $in: elementoIds },
+        });
+      }
+
       throw new Error(`Error creating the form: ${error.message}`);
     }
   }
 
-  // Encuentra el modulo relacionado al formulario por su nombre
+  private async validateElementosHtml(secciones: any[]) {
+    for (const seccionData of secciones) {
+      const { elemento_personalizado, seccion } = seccionData;
+
+      if (elemento_personalizado && elemento_personalizado.length > 0) {
+        for (const elementoData of elemento_personalizado) {
+          const { elemento_html_id } = elementoData;
+
+          // Validar existencia de elemento_html
+          const elementoHtml = await this.elementoHtmlModel
+            .findById(elemento_html_id)
+            .exec();
+          if (!elementoHtml) {
+            throw new NotFoundException(
+              `ElementoHtml with id ${elemento_html_id} not found`,
+            );
+          }
+        }
+      }
+
+      // Validar sub-secciones recursivamente
+      if (seccion && seccion.length > 0) {
+        await this.validateElementosHtml(seccion);
+      }
+    }
+  }
+
+  private async createSections(
+    secciones: any[],
+    formulario_id: Types.ObjectId,
+    parent_id: Types.ObjectId | null,
+    seccionIds: Types.ObjectId[],
+    elementoIds: Types.ObjectId[],
+  ) {
+    for (const seccionData of secciones) {
+      const { elemento_personalizado, seccion } = seccionData;
+      const seccionDto: SeccionDto = {
+        ...seccionData,
+        activo: true,
+        formulario_id,
+        padre_id: parent_id,
+      };
+      const newSeccion = await this.seccionService.post(seccionDto);
+      seccionIds.push(newSeccion._id);
+
+      // Crear elementos personalizados para esta sección
+      if (elemento_personalizado && elemento_personalizado.length > 0) {
+        await this.createElementosPersonalizados(
+          elemento_personalizado,
+          newSeccion._id,
+          elementoIds,
+        );
+      }
+
+      // Crear sub-secciones recursivamente
+      if (seccion && seccion.length > 0) {
+        await this.createSections(
+          seccion,
+          formulario_id,
+          newSeccion._id,
+          seccionIds,
+          elementoIds,
+        );
+      }
+    }
+  }
+
+  private async createElementosPersonalizados(
+    elementos: any[],
+    seccion_id: Types.ObjectId,
+    elementoIds: Types.ObjectId[],
+  ) {
+    for (const elementoData of elementos) {
+      const elementoPersonalizadoDto: ElementoPersonalizadoDto = {
+        ...elementoData,
+        activo: true,
+        seccion_id,
+        elemento_html_id: elementoData.elemento_html_id,
+      };
+
+      const newElementoPersonalizado =
+        await this.elementoPersonalizadoService.post(elementoPersonalizadoDto);
+      elementoIds.push(newElementoPersonalizado._id);
+    }
+  }
+
   private async findModulo(modulo_id: string): Promise<Modulo> {
-    const modulo = await this.ModuloModel.findOne({
-      _id: modulo_id,
-    }).exec();
+    const modulo = await this.ModuloModel.findOne({ _id: modulo_id }).exec();
     if (!modulo) {
       throw new NotFoundException(`Module with id ${modulo_id} not found`);
     }
     return modulo;
   }
 
-  // Actualiza el número de versión y las versiones anteriores del formulario
   private async updateExistingFormularios(
     modulo_id: Types.ObjectId,
   ): Promise<number> {
@@ -94,65 +209,6 @@ export class PlantillaService {
     );
 
     return version;
-  }
-
-  // Crea las secciones especificadas en la plantilla
-  private async createSections(
-    secciones: any[],
-    formulario_id: Types.ObjectId,
-    parent_id: Types.ObjectId | null,
-  ) {
-    for (const seccionData of secciones) {
-      const { elemento_personalizado, seccion } = seccionData;
-      const seccionDto: SeccionDto = {
-        ...seccionData,
-        activo: true,
-        formulario_id,
-        padre_id: parent_id,
-      };
-      const newSeccion = await this.seccionService.post(seccionDto);
-
-      // Crear elementos personalizados para esta sección
-      if (elemento_personalizado && elemento_personalizado.length > 0) {
-        await this.createElementosPersonalizados(
-          elemento_personalizado,
-          newSeccion._id,
-        );
-      }
-
-      // Crear sub-secciones recursivamente
-      if (seccion && seccion.length > 0) {
-        await this.createSections(seccion, formulario_id, newSeccion._id);
-      }
-    }
-  }
-
-  private async createElementosPersonalizados(
-    elementos: any[],
-    seccion_id: Types.ObjectId,
-  ) {
-    for (const elementoData of elementos) {
-      const { elemento_html_id } = elementoData;
-
-      // Validar existencia de elemento_html
-      const elementoHtml = await this.elementoHtmlModel
-        .findById(elemento_html_id)
-        .exec();
-      if (!elementoHtml) {
-        throw new NotFoundException(
-          `ElementoHtml with id ${elemento_html_id} not found`,
-        );
-      }
-
-      const elementoPersonalizadoDto: ElementoPersonalizadoDto = {
-        ...elementoData,
-        activo: true,
-        seccion_id,
-        elemento_html_id: elemento_html_id,
-      };
-
-      await this.elementoPersonalizadoService.post(elementoPersonalizadoDto);
-    }
   }
 
   async getTemplate(modulo_id: string, version?: number): Promise<any> {
