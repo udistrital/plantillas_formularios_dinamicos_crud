@@ -377,7 +377,7 @@ export class PlantillaService {
 
       // Eliminación lógica de las secciones
       await this.seccionModel.updateMany(
-        { _id: { $in: seccionIds } },
+        { formulario_id: formulario._id },
         { activo: false },
       );
     }
