@@ -9,12 +9,12 @@ import {
 } from '../formulario/schemas/formulario.schema';
 import { FormularioModule } from '../formulario/formulario.module';
 import { SeccionModule } from '../seccion/seccion.module';
-import { ElementoPersonalizadoModule } from '../elemento_personalizado/elemento_personalizado.module';
+import { CampoModule } from '../campo/campo.module';
 import { Seccion, SeccionSchema } from '../seccion/schemas/seccion.schema';
 import {
-  ElementoPersonalizado,
-  ElementoPersonalizadoSchema,
-} from '../elemento_personalizado/schemas/elemento_personalizado.schema';
+  Campo,
+  CampoSchema,
+} from '../campo/schemas/campo.schema';
 import {
   ElementoHtml,
   ElementoHtmlSchema,
@@ -26,12 +26,12 @@ import {
       { name: Modulo.name, schema: ModuloSchema },
       { name: Formulario.name, schema: FormularioSchema },
       { name: Seccion.name, schema: SeccionSchema },
-      { name: ElementoPersonalizado.name, schema: ElementoPersonalizadoSchema },
+      { name: Campo.name, schema: CampoSchema },
       { name: ElementoHtml.name, schema: ElementoHtmlSchema },
     ]),
     FormularioModule,
     SeccionModule,
-    ElementoPersonalizadoModule,
+    CampoModule,
   ],
   providers: [PlantillaService],
   controllers: [PlantillaController],

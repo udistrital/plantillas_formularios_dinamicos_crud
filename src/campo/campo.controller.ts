@@ -10,31 +10,31 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { ElementoPersonalizadoDto } from './dto/elemento_personalizado.dto';
-import { ElementoPersonalizadoService } from './elemento_personalizado.service';
+import { CampoDto } from './dto/campo.dto';
+import { CampoService } from './campo.service';
 import { FilterDto } from '../filters/filters.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('elementos-personalizados')
-@Controller('elementos-personalizados')
-export class ElementoPersonalizadoController {
+@ApiTags('campos')
+@Controller('campos')
+export class CampoController {
   constructor(
-    private elementoPersonalizadoService: ElementoPersonalizadoService,
+    private campoService: CampoService,
   ) {}
 
   @Post()
   async post(
     @Res() res,
-    @Body() elementoPersonalizadoDto: ElementoPersonalizadoDto,
+    @Body() campoDto: CampoDto,
   ) {
     try {
-      const elementoPersonalizado =
-        await this.elementoPersonalizadoService.post(elementoPersonalizadoDto);
+      const campo =
+        await this.campoService.post(campoDto);
       res.status(HttpStatus.CREATED).json({
         Success: true,
         Status: HttpStatus.CREATED,
         Message: 'Registration successful',
-        Data: elementoPersonalizado,
+        Data: campo,
       });
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).json({
@@ -51,7 +51,7 @@ export class ElementoPersonalizadoController {
   async getAll(@Res() res, @Query() filterDto: FilterDto) {
     try {
       const elementosPersonalizados =
-        await this.elementoPersonalizadoService.getAll(filterDto);
+        await this.campoService.getAll(filterDto);
       res.status(HttpStatus.OK).json({
         Success: true,
         Status: HttpStatus.OK,
@@ -72,13 +72,13 @@ export class ElementoPersonalizadoController {
   @Get('/:id')
   async getById(@Res() res, @Param('id') id: string) {
     try {
-      const elementoPersonalizado =
-        await this.elementoPersonalizadoService.getById(id);
+      const campo =
+        await this.campoService.getById(id);
       res.status(HttpStatus.OK).json({
         Success: true,
         Status: HttpStatus.OK,
         Message: 'Request successful',
-        Data: elementoPersonalizado,
+        Data: campo,
       });
     } catch (error) {
       res.status(HttpStatus.NOT_FOUND).json({
@@ -95,18 +95,18 @@ export class ElementoPersonalizadoController {
   async put(
     @Res() res,
     @Param('id') id: string,
-    @Body() elementoPersonalizadoDto: ElementoPersonalizadoDto,
+    @Body() campoDto: CampoDto,
   ) {
     try {
-      const elementoPersonalizado = await this.elementoPersonalizadoService.put(
+      const campo = await this.campoService.put(
         id,
-        elementoPersonalizadoDto,
+        campoDto,
       );
       res.status(HttpStatus.OK).json({
         Success: true,
         Status: HttpStatus.OK,
         Message: 'Update successful',
-        Data: elementoPersonalizado,
+        Data: campo,
       });
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).json({
@@ -122,7 +122,7 @@ export class ElementoPersonalizadoController {
   @Delete('/:id')
   async delete(@Res() res, @Param('id') id: string) {
     try {
-      await this.elementoPersonalizadoService.delete(id);
+      await this.campoService.delete(id);
       res.status(HttpStatus.OK).json({
         Success: true,
         Status: HttpStatus.OK,

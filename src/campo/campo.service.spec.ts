@@ -1,33 +1,32 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { ElementoPersonalizadoService } from './elemento_personalizado.service';
-import { ElementoPersonalizado } from './schemas/elemento_personalizado.schema';
-import { ElementoPersonalizadoDto } from './dto/elemento_personalizado.dto';
+import { CampoService } from './campo.service';
+import { Campo } from './schemas/campo.schema';
+import { CampoDto } from './dto/campo.dto';
 import { Seccion } from '../seccion/schemas/seccion.schema';
 import { ElementoHtml } from '../elemento-html/schemas/elemento-html.schema';
 import { Model } from 'mongoose';
 import { FilterDto } from '../filters/filters.dto';
 
-const mockElementoPersonalizadoDto: ElementoPersonalizadoDto = {
-  nombre: 'Elemento Personalizado',
-  descripcion: 'Descripción del elemento personalizado',
+const mockCampoDto: CampoDto = {
+  nombre: 'Campo',
+  descripcion: 'Descripción del campo',
   seccion_id: '66aed6a431c4ca1c60085cdd',
   elemento_html_id: '66aed6a431c4ca1c60085cde',
   label: {},
   deshabilitado: false,
   solo_lectura: false,
   placeholder: {},
-  requerido: true,
-  validadores_personalizados: {},
-  parametros_personalizados: {},
+  validaciones: {},
+  parametros: {},
   dependencia: {},
   activo: true,
   fecha_creacion: new Date(),
   fecha_modificacion: new Date(),
 };
 
-const mockElementoPersonalizado = {
-  ...mockElementoPersonalizadoDto,
+const mockCampo = {
+  ...mockCampoDto,
   _id: '66aed6a431c4ca1c60085cdf',
 };
 
@@ -41,18 +40,18 @@ const mockElementoHtml = {
   nombre: 'Elemento de Prueba',
 };
 
-describe('ElementoPersonalizadoService', () => {
-  let elementoPersonalizadoService: ElementoPersonalizadoService;
-  let elementoPersonalizadoModel: Model<ElementoPersonalizado>;
+describe('CampoService', () => {
+  let campoService: CampoService;
+  let campoModel: Model<Campo>;
   let seccionModel: Model<Seccion>;
   let elementoHtmlModel: Model<ElementoHtml>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ElementoPersonalizadoService,
+        CampoService,
         {
-          provide: getModelToken(ElementoPersonalizado.name),
+          provide: getModelToken(Campo.name),
           useValue: {
             create: jest.fn(),
             find: jest.fn(),
@@ -75,11 +74,11 @@ describe('ElementoPersonalizadoService', () => {
       ],
     }).compile();
 
-    elementoPersonalizadoService = module.get<ElementoPersonalizadoService>(
-      ElementoPersonalizadoService,
+    campoService = module.get<CampoService>(
+      CampoService,
     );
-    elementoPersonalizadoModel = module.get<Model<ElementoPersonalizado>>(
-      getModelToken(ElementoPersonalizado.name),
+    campoModel = module.get<Model<Campo>>(
+      getModelToken(Campo.name),
     );
     seccionModel = module.get<Model<Seccion>>(getModelToken(Seccion.name));
     elementoHtmlModel = module.get<Model<ElementoHtml>>(
@@ -88,11 +87,11 @@ describe('ElementoPersonalizadoService', () => {
   });
 
   it('Debería estar definido', () => {
-    expect(elementoPersonalizadoService).toBeDefined();
+    expect(campoService).toBeDefined();
   });
 
   describe('post', () => {
-    it('Debería crear y devolver un elemento personalizado', async () => {
+    it('Debería crear y devolver un campo', async () => {
       jest.spyOn(seccionModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(mockSeccion),
       } as any);
@@ -100,16 +99,16 @@ describe('ElementoPersonalizadoService', () => {
         exec: jest.fn().mockResolvedValue(mockElementoHtml),
       } as any);
       jest
-        .spyOn(elementoPersonalizadoModel, 'create')
+        .spyOn(campoModel, 'create')
         .mockImplementationOnce(() =>
-          Promise.resolve(mockElementoPersonalizado),
+          Promise.resolve(mockCampo),
         );
 
-      const result = await elementoPersonalizadoService.post(
-        mockElementoPersonalizadoDto,
+      const result = await campoService.post(
+        mockCampoDto,
       );
 
-      expect(result).toEqual(mockElementoPersonalizado);
+      expect(result).toEqual(mockCampo);
     });
 
     it('Debería lanzar un error si la sección relacionada no existe', async () => {
@@ -121,9 +120,9 @@ describe('ElementoPersonalizadoService', () => {
       } as any);
 
       await expect(
-        elementoPersonalizadoService.post(mockElementoPersonalizadoDto),
+        campoService.post(mockCampoDto),
       ).rejects.toThrow(
-        `Elemento-personalizado with id ${mockElementoPersonalizadoDto.seccion_id} doesn't exist`,
+        `Elemento-personalizado with id ${mockCampoDto.seccion_id} doesn't exist`,
       );
     });
 
@@ -136,20 +135,20 @@ describe('ElementoPersonalizadoService', () => {
       } as any);
 
       await expect(
-        elementoPersonalizadoService.post(mockElementoPersonalizadoDto),
+        campoService.post(mockCampoDto),
       ).rejects.toThrow(
-        `Elemento-html with id ${mockElementoPersonalizadoDto.elemento_html_id} doesn't exist`,
+        `Elemento-html with id ${mockCampoDto.elemento_html_id} doesn't exist`,
       );
     });
   });
 
   describe('getAll', () => {
-    it('Debería retornar todos los elementos personalizados con filtros aplicados', async () => {
+    it('Debería retornar todos los campos con filtros aplicados', async () => {
       const mockElementosPersonalizados = [
-        mockElementoPersonalizado,
+        mockCampo,
         {
           _id: '66aed6a431c4ca1c60085ce0',
-          nombre: 'Elemento Personalizado 2',
+          nombre: 'campo 2',
           descripcion: 'Otra descripción',
           seccion_id: '66aed6a431c4ca1c60085cdd',
           elemento_html_id: '66aed6a431c4ca1c60085cde',
@@ -160,7 +159,7 @@ describe('ElementoPersonalizadoService', () => {
       ];
 
       const mockFilterDto: FilterDto = {
-        query: 'nombre:Elemento Personalizado',
+        query: 'nombre:campo',
         fields: 'nombre,descripcion',
         sortby: 'fecha_creacion',
         order: 'desc',
@@ -176,52 +175,52 @@ describe('ElementoPersonalizadoService', () => {
       };
 
       jest
-        .spyOn(elementoPersonalizadoModel, 'find')
+        .spyOn(campoModel, 'find')
         .mockReturnValue(mockQuery as any);
 
-      const result = await elementoPersonalizadoService.getAll(mockFilterDto);
+      const result = await campoService.getAll(mockFilterDto);
 
       expect(result).toEqual(mockElementosPersonalizados);
     });
   });
 
   describe('getById', () => {
-    it('Debería retornar un elemento personalizado por su ID', async () => {
-      jest.spyOn(elementoPersonalizadoModel, 'findById').mockReturnValue({
+    it('Debería retornar un campo por su ID', async () => {
+      jest.spyOn(campoModel, 'findById').mockReturnValue({
         exec: jest
           .fn()
           .mockResolvedValue(
-            mockElementoPersonalizado as unknown as ElementoPersonalizado,
+            mockCampo as unknown as Campo,
           ),
       } as any);
 
-      const result = await elementoPersonalizadoService.getById(
-        mockElementoPersonalizado._id,
+      const result = await campoService.getById(
+        mockCampo._id,
       );
 
-      expect(elementoPersonalizadoModel.findById).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
+      expect(campoModel.findById).toHaveBeenCalledWith(
+        mockCampo._id,
       );
-      expect(result).toEqual(mockElementoPersonalizado);
+      expect(result).toEqual(mockCampo);
     });
 
-    it('Debería lanzar un error si el elemento personalizado no existe', async () => {
-      jest.spyOn(elementoPersonalizadoModel, 'findById').mockReturnValue({
+    it('Debería lanzar un error si el campo no existe', async () => {
+      jest.spyOn(campoModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(null),
       } as any);
 
       await expect(
-        elementoPersonalizadoService.getById(mockElementoPersonalizado._id),
-      ).rejects.toThrow(`${mockElementoPersonalizado._id} doesn't exist`);
+        campoService.getById(mockCampo._id),
+      ).rejects.toThrow(`${mockCampo._id} doesn't exist`);
 
-      expect(elementoPersonalizadoModel.findById).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
+      expect(campoModel.findById).toHaveBeenCalledWith(
+        mockCampo._id,
       );
     });
   });
 
   describe('put', () => {
-    it('Debería actualizar un elemento personalizado', async () => {
+    it('Debería actualizar un campo', async () => {
       jest.spyOn(seccionModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(mockSeccion),
       } as any);
@@ -229,29 +228,29 @@ describe('ElementoPersonalizadoService', () => {
         exec: jest.fn().mockResolvedValue(mockElementoHtml),
       } as any);
       jest
-        .spyOn(elementoPersonalizadoModel, 'findByIdAndUpdate')
+        .spyOn(campoModel, 'findByIdAndUpdate')
         .mockReturnValue({
           exec: jest
             .fn()
             .mockResolvedValue(
-              mockElementoPersonalizado as unknown as ElementoPersonalizado,
+              mockCampo as unknown as Campo,
             ),
         } as any);
 
-      const result = await elementoPersonalizadoService.put(
-        mockElementoPersonalizado._id,
-        mockElementoPersonalizadoDto,
+      const result = await campoService.put(
+        mockCampo._id,
+        mockCampoDto,
       );
 
-      expect(elementoPersonalizadoModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
-        mockElementoPersonalizadoDto,
+      expect(campoModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        mockCampo._id,
+        mockCampoDto,
         { new: true },
       );
-      expect(result).toEqual(mockElementoPersonalizado);
+      expect(result).toEqual(mockCampo);
     });
 
-    it('Debería lanzar un error si el elemento personalizado no existe', async () => {
+    it('Debería lanzar un error si el campo no existe', async () => {
       jest.spyOn(seccionModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(mockSeccion),
       } as any);
@@ -259,63 +258,63 @@ describe('ElementoPersonalizadoService', () => {
         exec: jest.fn().mockResolvedValue(mockElementoHtml),
       } as any);
       jest
-        .spyOn(elementoPersonalizadoModel, 'findByIdAndUpdate')
+        .spyOn(campoModel, 'findByIdAndUpdate')
         .mockReturnValue({
           exec: jest.fn().mockResolvedValue(null),
         } as any);
 
       await expect(
-        elementoPersonalizadoService.put(
-          mockElementoPersonalizado._id,
-          mockElementoPersonalizadoDto,
+        campoService.put(
+          mockCampo._id,
+          mockCampoDto,
         ),
-      ).rejects.toThrow(`${mockElementoPersonalizado._id} doesn't exist`);
+      ).rejects.toThrow(`${mockCampo._id} doesn't exist`);
 
-      expect(elementoPersonalizadoModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
-        mockElementoPersonalizadoDto,
+      expect(campoModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        mockCampo._id,
+        mockCampoDto,
         { new: true },
       );
     });
   });
 
   describe('delete', () => {
-    it('Debería desactivar un elemento personalizado', async () => {
+    it('Debería desactivar un campo', async () => {
       jest
-        .spyOn(elementoPersonalizadoModel, 'findByIdAndUpdate')
+        .spyOn(campoModel, 'findByIdAndUpdate')
         .mockReturnValue({
           exec: jest
             .fn()
             .mockResolvedValue(
-              mockElementoPersonalizado as unknown as ElementoPersonalizado,
+              mockCampo as unknown as Campo,
             ),
         } as any);
 
-      const result = await elementoPersonalizadoService.delete(
-        mockElementoPersonalizado._id,
+      const result = await campoService.delete(
+        mockCampo._id,
       );
 
-      expect(elementoPersonalizadoModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
+      expect(campoModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        mockCampo._id,
         { activo: false },
         { new: true },
       );
-      expect(result).toEqual(mockElementoPersonalizado);
+      expect(result).toEqual(mockCampo);
     });
 
-    it('Debería lanzar un error si el elemento personalizado no existe', async () => {
+    it('Debería lanzar un error si el campo no existe', async () => {
       jest
-        .spyOn(elementoPersonalizadoModel, 'findByIdAndUpdate')
+        .spyOn(campoModel, 'findByIdAndUpdate')
         .mockReturnValue({
           exec: jest.fn().mockResolvedValue(null),
         } as any);
 
       await expect(
-        elementoPersonalizadoService.delete(mockElementoPersonalizado._id),
-      ).rejects.toThrow(`${mockElementoPersonalizado._id} doesn't exist`);
+        campoService.delete(mockCampo._id),
+      ).rejects.toThrow(`${mockCampo._id} doesn't exist`);
 
-      expect(elementoPersonalizadoModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
+      expect(campoModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        mockCampo._id,
         { activo: false },
         { new: true },
       );

@@ -1,43 +1,42 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ElementoPersonalizadoController } from './elemento_personalizado.controller';
-import { ElementoPersonalizadoService } from './elemento_personalizado.service';
+import { CampoController } from './campo.controller';
+import { CampoService } from './campo.service';
 import { HttpStatus } from '@nestjs/common';
-import { ElementoPersonalizadoDto } from './dto/elemento_personalizado.dto';
+import { CampoDto } from './dto/campo.dto';
 import { FilterDto } from '../filters/filters.dto';
 
-const mockElementoPersonalizadoDto: ElementoPersonalizadoDto = {
-  nombre: 'Elemento Personalizado',
-  descripcion: 'Descripción del elemento personalizado',
+const mockCampoDto: CampoDto = {
+  nombre: 'Campo',
+  descripcion: 'Descripción del Campo',
   seccion_id: '66aed6a431c4ca1c60085cdd',
   elemento_html_id: '66aed6a431c4ca1c60085cde',
   label: {},
   deshabilitado: false,
   solo_lectura: false,
   placeholder: {},
-  requerido: true,
-  validadores_personalizados: {},
-  parametros_personalizados: {},
+  validaciones: {},
+  parametros: {},
   dependencia: {},
   activo: true,
   fecha_creacion: new Date(),
   fecha_modificacion: new Date(),
 };
 
-const mockElementoPersonalizado = {
-  ...mockElementoPersonalizadoDto,
+const mockCampo = {
+  ...mockCampoDto,
   _id: '66aed6a431c4ca1c60085cdd',
 };
 
-describe('ElementoPersonalizadoController', () => {
-  let controller: ElementoPersonalizadoController;
-  let service: ElementoPersonalizadoService;
+describe('CampoController', () => {
+  let controller: CampoController;
+  let service: CampoService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ElementoPersonalizadoController],
+      controllers: [CampoController],
       providers: [
         {
-          provide: ElementoPersonalizadoService,
+          provide: CampoService,
           useValue: {
             post: jest.fn(),
             getAll: jest.fn(),
@@ -49,11 +48,11 @@ describe('ElementoPersonalizadoController', () => {
       ],
     }).compile();
 
-    controller = module.get<ElementoPersonalizadoController>(
-      ElementoPersonalizadoController,
+    controller = module.get<CampoController>(
+      CampoController,
     );
-    service = module.get<ElementoPersonalizadoService>(
-      ElementoPersonalizadoService,
+    service = module.get<CampoService>(
+      CampoService,
     );
   });
 
@@ -65,28 +64,28 @@ describe('ElementoPersonalizadoController', () => {
     it('Debería retornar Created con datos válidos', async () => {
       jest
         .spyOn(service, 'post')
-        .mockResolvedValue(mockElementoPersonalizado as any);
+        .mockResolvedValue(mockCampo as any);
 
       const res = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
 
-      await controller.post(res as any, mockElementoPersonalizadoDto);
+      await controller.post(res as any, mockCampoDto);
 
-      expect(service.post).toHaveBeenCalledWith(mockElementoPersonalizadoDto);
+      expect(service.post).toHaveBeenCalledWith(mockCampoDto);
       expect(res.status).toHaveBeenCalledWith(HttpStatus.CREATED);
       expect(res.json).toHaveBeenCalledWith({
         Success: true,
         Status: HttpStatus.CREATED,
         Message: 'Registration successful',
-        Data: mockElementoPersonalizado,
+        Data: mockCampo,
       });
     });
 
     it('Debería retornar BadRequest con error', async () => {
       const mockError = new Error(
-        'ElementoPersonalizado validation failed: activo: Cast to Boolean failed for value "2" (type number) at path "activo"',
+        'Campo validation failed: activo: Cast to Boolean failed for value "2" (type number) at path "activo"',
       );
 
       jest.spyOn(service, 'post').mockRejectedValue(mockError);
@@ -96,9 +95,9 @@ describe('ElementoPersonalizadoController', () => {
         json: jest.fn(),
       };
 
-      await controller.post(res as any, mockElementoPersonalizadoDto);
+      await controller.post(res as any, mockCampoDto);
 
-      expect(service.post).toHaveBeenCalledWith(mockElementoPersonalizadoDto);
+      expect(service.post).toHaveBeenCalledWith(mockCampoDto);
       expect(res.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
       expect(res.json).toHaveBeenCalledWith({
         Success: false,
@@ -124,14 +123,14 @@ describe('ElementoPersonalizadoController', () => {
     it('Debería retornar OK con datos válidos', async () => {
       const mockElementosPersonalizados = [
         {
-          ...mockElementoPersonalizado,
+          ...mockCampo,
           _id: '1',
-          nombre: 'Elemento Personalizado 1',
+          nombre: 'Campo 1',
         },
         {
-          ...mockElementoPersonalizado,
+          ...mockCampo,
           _id: '2',
-          nombre: 'Elemento Personalizado 2',
+          nombre: 'Campo 2',
         },
       ];
 
@@ -184,24 +183,24 @@ describe('ElementoPersonalizadoController', () => {
     it('Debería retornar OK con id válido', async () => {
       jest
         .spyOn(service, 'getById')
-        .mockResolvedValue(mockElementoPersonalizado as any);
+        .mockResolvedValue(mockCampo as any);
 
       const res = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
 
-      await controller.getById(res as any, mockElementoPersonalizado._id);
+      await controller.getById(res as any, mockCampo._id);
 
       expect(service.getById).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
+        mockCampo._id,
       );
       expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
       expect(res.json).toHaveBeenCalledWith({
         Success: true,
         Status: HttpStatus.OK,
         Message: 'Request successful',
-        Data: mockElementoPersonalizado,
+        Data: mockCampo,
       });
     });
 
@@ -209,7 +208,7 @@ describe('ElementoPersonalizadoController', () => {
       jest
         .spyOn(service, 'getById')
         .mockRejectedValue(
-          new Error(`${mockElementoPersonalizado._id} doesn't exist`),
+          new Error(`${mockCampo._id} doesn't exist`),
         );
 
       const res = {
@@ -217,10 +216,10 @@ describe('ElementoPersonalizadoController', () => {
         json: jest.fn(),
       };
 
-      await controller.getById(res as any, mockElementoPersonalizado._id);
+      await controller.getById(res as any, mockCampo._id);
 
       expect(service.getById).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
+        mockCampo._id,
       );
       expect(res.status).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
       expect(res.json).toHaveBeenCalledWith({
@@ -228,7 +227,7 @@ describe('ElementoPersonalizadoController', () => {
         Status: HttpStatus.NOT_FOUND,
         Message:
           'Error service GetOne: The request contains an incorrect parameter or no record exist',
-        Data: `${mockElementoPersonalizado._id} doesn't exist`,
+        Data: `${mockCampo._id} doesn't exist`,
       });
     });
   });
@@ -237,7 +236,7 @@ describe('ElementoPersonalizadoController', () => {
     it('Debería retornar OK con datos válidos', async () => {
       jest
         .spyOn(service, 'put')
-        .mockResolvedValue(mockElementoPersonalizado as any);
+        .mockResolvedValue(mockCampo as any);
 
       const res = {
         status: jest.fn().mockReturnThis(),
@@ -246,26 +245,26 @@ describe('ElementoPersonalizadoController', () => {
 
       await controller.put(
         res as any,
-        mockElementoPersonalizado._id,
-        mockElementoPersonalizadoDto,
+        mockCampo._id,
+        mockCampoDto,
       );
 
       expect(service.put).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
-        mockElementoPersonalizadoDto,
+        mockCampo._id,
+        mockCampoDto,
       );
       expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
       expect(res.json).toHaveBeenCalledWith({
         Success: true,
         Status: HttpStatus.OK,
         Message: 'Update successful',
-        Data: mockElementoPersonalizado,
+        Data: mockCampo,
       });
     });
 
     it('Debería retornar BadRequest con error', async () => {
       const mockError = new Error(
-        `${mockElementoPersonalizado._id} doesn't exist`,
+        `${mockCampo._id} doesn't exist`,
       );
 
       jest.spyOn(service, 'put').mockRejectedValue(mockError);
@@ -277,13 +276,13 @@ describe('ElementoPersonalizadoController', () => {
 
       await controller.put(
         res as any,
-        mockElementoPersonalizado._id,
-        mockElementoPersonalizadoDto,
+        mockCampo._id,
+        mockCampoDto,
       );
 
       expect(service.put).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
-        mockElementoPersonalizadoDto,
+        mockCampo._id,
+        mockCampoDto,
       );
       expect(res.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
       expect(res.json).toHaveBeenCalledWith({
@@ -305,10 +304,10 @@ describe('ElementoPersonalizadoController', () => {
         json: jest.fn(),
       };
 
-      await controller.delete(res as any, mockElementoPersonalizado._id);
+      await controller.delete(res as any, mockCampo._id);
 
       expect(service.delete).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
+        mockCampo._id,
       );
       expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
       expect(res.json).toHaveBeenCalledWith({
@@ -316,14 +315,14 @@ describe('ElementoPersonalizadoController', () => {
         Status: HttpStatus.OK,
         Message: 'Delete successful',
         Data: {
-          _id: mockElementoPersonalizado._id,
+          _id: mockCampo._id,
         },
       });
     });
 
     it('Debería retornar NotFound con error', async () => {
       const mockError = new Error(
-        `${mockElementoPersonalizado._id} doesn't exist`,
+        `${mockCampo._id} doesn't exist`,
       );
 
       jest.spyOn(service, 'delete').mockRejectedValue(mockError);
@@ -333,10 +332,10 @@ describe('ElementoPersonalizadoController', () => {
         json: jest.fn(),
       };
 
-      await controller.delete(res as any, mockElementoPersonalizado._id);
+      await controller.delete(res as any, mockCampo._id);
 
       expect(service.delete).toHaveBeenCalledWith(
-        mockElementoPersonalizado._id,
+        mockCampo._id,
       );
       expect(res.status).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
       expect(res.json).toHaveBeenCalledWith({
