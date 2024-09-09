@@ -887,16 +887,16 @@
         ]
       }
     },
-    "/elementos-personalizados": {
+    "/campos": {
       "post": {
-        "operationId": "ElementoPersonalizadoController_post",
+        "operationId": "CampoController_post",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ElementoPersonalizadoDto"
+                "$ref": "#/components/schemas/CampoDto"
               }
             }
           }
@@ -907,11 +907,11 @@
           }
         },
         "tags": [
-          "elementos-personalizados"
+          "campos"
         ]
       },
       "get": {
-        "operationId": "ElementoPersonalizadoController_getAll",
+        "operationId": "CampoController_getAll",
         "parameters": [
           {
             "name": "query",
@@ -983,13 +983,13 @@
           }
         },
         "tags": [
-          "elementos-personalizados"
+          "campos"
         ]
       }
     },
-    "/elementos-personalizados/{id}": {
+    "/campos/{id}": {
       "get": {
-        "operationId": "ElementoPersonalizadoController_getById",
+        "operationId": "CampoController_getById",
         "parameters": [
           {
             "name": "id",
@@ -1006,11 +1006,11 @@
           }
         },
         "tags": [
-          "elementos-personalizados"
+          "campos"
         ]
       },
       "put": {
-        "operationId": "ElementoPersonalizadoController_put",
+        "operationId": "CampoController_put",
         "parameters": [
           {
             "name": "id",
@@ -1026,7 +1026,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ElementoPersonalizadoDto"
+                "$ref": "#/components/schemas/CampoDto"
               }
             }
           }
@@ -1037,11 +1037,11 @@
           }
         },
         "tags": [
-          "elementos-personalizados"
+          "campos"
         ]
       },
       "delete": {
-        "operationId": "ElementoPersonalizadoController_delete",
+        "operationId": "CampoController_delete",
         "parameters": [
           {
             "name": "id",
@@ -1058,7 +1058,7 @@
           }
         },
         "tags": [
-          "elementos-personalizados"
+          "campos"
         ]
       }
     },
@@ -1376,7 +1376,7 @@
           "fecha_modificacion"
         ]
       },
-      "ElementoPersonalizadoDto": {
+      "CampoDto": {
         "type": "object",
         "properties": {
           "nombre": {
@@ -1403,13 +1403,10 @@
           "placeholder": {
             "type": "object"
           },
-          "requerido": {
-            "type": "boolean"
-          },
-          "validadores_personalizados": {
+          "validaciones": {
             "type": "object"
           },
-          "parametros_personalizados": {
+          "parametros": {
             "type": "object"
           },
           "dependencia": {
@@ -1436,9 +1433,8 @@
           "deshabilitado",
           "solo_lectura",
           "placeholder",
-          "requerido",
-          "validadores_personalizados",
-          "parametros_personalizados",
+          "validaciones",
+          "parametros",
           "dependencia",
           "activo",
           "fecha_creacion",

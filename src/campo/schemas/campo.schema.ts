@@ -4,8 +4,8 @@ import { Document, Types } from 'mongoose';
 import { Seccion } from '../../seccion/schemas/seccion.schema';
 import { ElementoHtml } from '../../elemento-html/schemas/elemento-html.schema';
 
-@Schema({ collection: 'elementos_personalizados' })
-export class ElementoPersonalizado extends Document {
+@Schema({ collection: 'campos' })
+export class Campo extends Document {
   @Prop({ required: true })
   nombre: string;
 
@@ -30,14 +30,11 @@ export class ElementoPersonalizado extends Document {
   @Prop({ type: Object, required: false })
   placeholder: object;
 
-  @Prop({ required: true })
-  requerido: boolean;
+  @Prop({ type: Object, required: false })
+  validaciones: object;
 
   @Prop({ type: Object, required: false })
-  validadores_personalizados: object;
-
-  @Prop({ type: Object, required: false })
-  parametros_personalizados: object;
+  parametros: object;
 
   @Prop({ type: Object, required: false })
   dependencia: object;
@@ -52,6 +49,6 @@ export class ElementoPersonalizado extends Document {
   fecha_modificacion: Date;
 }
 
-export const ElementoPersonalizadoSchema = SchemaFactory.createForClass(
-  ElementoPersonalizado,
+export const CampoSchema = SchemaFactory.createForClass(
+  Campo,
 );

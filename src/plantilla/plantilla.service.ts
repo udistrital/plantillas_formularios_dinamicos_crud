@@ -6,18 +6,18 @@ import { Model, ObjectId, Types } from 'mongoose';
 import { Modulo } from '../modulo/schemas/modulo.schema';
 import { Formulario } from '../formulario/schemas/formulario.schema';
 import { Seccion } from '../seccion/schemas/seccion.schema';
-import { ElementoPersonalizado } from '../elemento_personalizado/schemas/elemento_personalizado.schema';
+import { Campo } from 'src/campo/schemas/campo.schema';
 import { ElementoHtml } from '../elemento-html/schemas/elemento-html.schema';
 
 // DTOs
 import { FormularioDto } from '../formulario/dto/formulario.dto';
 import { SeccionDto } from '../seccion/dto/seccion.dto';
-import { ElementoPersonalizadoDto } from '../elemento_personalizado/dto/elemento_personalizado.dto';
+import { CampoDto } from 'src/campo/dto/campo.dto';
 
 // Services
 import { FormularioService } from '../formulario/formulario.service';
 import { SeccionService } from '../seccion/seccion.service';
-import { ElementoPersonalizadoService } from '../elemento_personalizado/elemento_personalizado.service';
+import { CampoService } from 'src/campo/campo.service';
 
 @Injectable()
 export class PlantillaService {
@@ -29,9 +29,9 @@ export class PlantillaService {
     private readonly formularioService: FormularioService,
     @InjectModel(Seccion.name) private readonly seccionModel: Model<Seccion>,
     private readonly seccionService: SeccionService,
-    @InjectModel(ElementoPersonalizado.name)
-    private readonly elementoPersonalizadoModel: Model<ElementoPersonalizado>,
-    private readonly elementoPersonalizadoService: ElementoPersonalizadoService,
+    @InjectModel(Campo.name)
+    private readonly campoModel: Model<Campo>,
+    private readonly campoService: CampoService,
     @InjectModel(ElementoHtml.name)
     private readonly elementoHtmlModel: Model<ElementoHtml>,
   ) {}
@@ -68,7 +68,7 @@ export class PlantillaService {
 
       newFormulario = await this.formularioService.post(formularioDto);
 
-      // Crear secciones y elementos personalizados
+      // Crear secciones y campos
       await this.createSections(
         formulario.seccion,
         newFormulario._id,
@@ -90,7 +90,7 @@ export class PlantillaService {
       }
 
       if (elementoIds.length > 0) {
-        await this.deleteElementosPersonalizadosBD(elementoIds);
+        await this.deleteCamposBD(elementoIds);
       }
 
       // Restaurar la versión anterior si se había establecido
@@ -119,10 +119,10 @@ export class PlantillaService {
     }
   }
 
-  // Función para eliminar elementos personalizados por sus IDs
-  private async deleteElementosPersonalizadosBD(elementoIds: Array<ObjectId>) {
+  // Función para eliminar campos por sus IDs
+  private async deleteCamposBD(elementoIds: Array<ObjectId>) {
     if (elementoIds.length > 0) {
-      await this.elementoPersonalizadoModel.deleteMany({
+      await this.campoModel.deleteMany({
         _id: { $in: elementoIds },
       });
     }
@@ -130,10 +130,10 @@ export class PlantillaService {
 
   private async validateElementosHtml(secciones: any[]) {
     for (const seccionData of secciones) {
-      const { elemento_personalizado, seccion } = seccionData;
+      const { campo, seccion } = seccionData;
 
-      if (elemento_personalizado && elemento_personalizado.length > 0) {
-        for (const elementoData of elemento_personalizado) {
+      if (campo && campo.length > 0) {
+        for (const elementoData of campo) {
           const { elemento_html_id } = elementoData;
 
           // Validar existencia de elemento_html
@@ -163,7 +163,7 @@ export class PlantillaService {
     elementoIds: Types.ObjectId[],
   ) {
     for (const seccionData of secciones) {
-      const { elemento_personalizado, seccion } = seccionData;
+      const { campo, seccion } = seccionData;
       const seccionDto: SeccionDto = {
         ...seccionData,
         activo: true,
@@ -173,10 +173,10 @@ export class PlantillaService {
       const newSeccion = await this.seccionService.post(seccionDto);
       seccionIds.push(newSeccion._id);
 
-      // Crear elementos personalizados para esta sección
-      if (elemento_personalizado && elemento_personalizado.length > 0) {
-        await this.createElementosPersonalizados(
-          elemento_personalizado,
+      // Crear campos para esta sección
+      if (campo && campo.length > 0) {
+        await this.createCampos(
+          campo,
           newSeccion._id,
           elementoIds,
         );
@@ -195,22 +195,22 @@ export class PlantillaService {
     }
   }
 
-  private async createElementosPersonalizados(
+  private async createCampos(
     elementos: any[],
     seccion_id: Types.ObjectId,
     elementoIds: Types.ObjectId[],
   ) {
     for (const elementoData of elementos) {
-      const elementoPersonalizadoDto: ElementoPersonalizadoDto = {
+      const campoDto: CampoDto = {
         ...elementoData,
         activo: true,
         seccion_id,
         elemento_html_id: elementoData.elemento_html_id,
       };
 
-      const newElementoPersonalizado =
-        await this.elementoPersonalizadoService.post(elementoPersonalizadoDto);
-      elementoIds.push(newElementoPersonalizado._id);
+      const newCampo =
+        await this.campoService.post(campoDto);
+      elementoIds.push(newCampo._id);
     }
   }
 
@@ -269,8 +269,8 @@ export class PlantillaService {
       .find({ formulario_id: formulario._id })
       .exec();
 
-    // Obtener los elementos personalizados de cada sección con populate de elemento_html_id
-    const elementosPersonalizados = await this.elementoPersonalizadoModel
+    // Obtener los campos de cada sección con populate de elemento_html_id
+    const campos = await this.campoModel
       .find({ seccion_id: { $in: secciones.map((seccion) => seccion._id) } })
       .populate('elemento_html_id')
       .exec();
@@ -285,20 +285,19 @@ export class PlantillaService {
       const seccion = seccionesMap.get(seccionId);
       if (!seccion) return null;
 
-      const elementos = elementosPersonalizados
-        .filter((elemento) => elemento.seccion_id.toString() === seccionId)
-        .map((elemento) => ({
-          _id: elemento._id,
-          nombre: elemento.nombre,
-          descripcion: elemento.descripcion,
-          elemento_html: elemento.elemento_html_id, // Elemento HTML poblado
-          label: elemento.label,
-          deshabilitado: elemento.deshabilitado,
-          solo_lectura: elemento.solo_lectura,
-          requerido: elemento.requerido,
-          validadores_personalizados: elemento.validadores_personalizados,
-          parametros_personalizados: elemento.parametros_personalizados,
-          dependencia: elemento.dependencia,
+      const elementos = campos
+        .filter((campo) => campo.seccion_id.toString() === seccionId)
+        .map((campo) => ({
+          _id: campo._id,
+          nombre: campo.nombre,
+          descripcion: campo.descripcion,
+          elemento_html: campo.elemento_html_id, // Elemento HTML poblado
+          label: campo.label,
+          deshabilitado: campo.deshabilitado,
+          solo_lectura: campo.solo_lectura,
+          validaciones: campo.validaciones,
+          parametros: campo.parametros,
+          dependencia: campo.dependencia,
         }));
 
       const subSecciones = secciones
@@ -314,7 +313,7 @@ export class PlantillaService {
         activo: seccion.activo,
         fecha_creacion: seccion.fecha_creacion,
         fecha_modificacion: seccion.fecha_modificacion,
-        ...(elementos.length > 0 && { elemento_personalizado: elementos }),
+        ...(elementos.length > 0 && { campo: elementos }),
         ...(subSecciones.length > 0 && { seccion: subSecciones }),
       };
     };
@@ -369,8 +368,8 @@ export class PlantillaService {
       .exec();
 
     if (seccionIds.length > 0) {
-      // Eliminación lógica de los elementos personalizados asociados a las secciones
-      await this.elementoPersonalizadoModel.updateMany(
+      // Eliminación lógica de los campos asociados a las secciones
+      await this.campoModel.updateMany(
         { seccion_id: { $in: seccionIds } },
         { activo: false },
       );

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ElementoPersonalizadoDto {
+export class CampoDto {
   @ApiProperty()
   readonly nombre: string;
 
@@ -26,13 +26,10 @@ export class ElementoPersonalizadoDto {
   readonly placeholder: object;
 
   @ApiProperty()
-  readonly requerido: boolean;
+  readonly validaciones: object;
 
   @ApiProperty()
-  readonly validadores_personalizados: object;
-
-  @ApiProperty()
-  readonly parametros_personalizados: object;
+  readonly parametros: object;
 
   @ApiProperty()
   readonly dependencia: object;

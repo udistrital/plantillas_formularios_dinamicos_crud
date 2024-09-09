@@ -11,7 +11,7 @@ import { FormularioModule } from './formulario/formulario.module';
 import { ModalAlertaModule } from './modal-alerta/modal-alerta.module';
 import { SeccionModule } from './seccion/seccion.module';
 import { ElementoHtmlModule } from './elemento-html/elemento-html.module';
-import { ElementoPersonalizadoModule } from './elemento_personalizado/elemento_personalizado.module';
+import { CampoModule } from './campo/campo.module';
 import { PlantillaModule } from './plantilla/plantilla.module';
 
 @Module({
@@ -28,7 +28,7 @@ import { PlantillaModule } from './plantilla/plantilla.module';
     ModalAlertaModule,
     SeccionModule,
     ElementoHtmlModule,
-    ElementoPersonalizadoModule,
+    CampoModule,
     PlantillaModule,
   ],
   controllers: [AppController],
