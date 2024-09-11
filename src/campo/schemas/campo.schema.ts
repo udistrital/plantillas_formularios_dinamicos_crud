@@ -2,7 +2,6 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
 import { Seccion } from '../../seccion/schemas/seccion.schema';
-import { ElementoHtml } from '../../elemento-html/schemas/elemento-html.schema';
 
 @Schema({ collection: 'campos' })
 export class Campo extends Document {
@@ -15,8 +14,8 @@ export class Campo extends Document {
   @Prop({ required: true, type: Types.ObjectId, ref: Seccion.name })
   seccion_id: Seccion | Types.ObjectId;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: ElementoHtml.name })
-  elemento_html_id: ElementoHtml | Types.ObjectId;
+  @Prop({ required: true })
+  tipo: string;
 
   @Prop({ type: Object, required: true })
   label: object;

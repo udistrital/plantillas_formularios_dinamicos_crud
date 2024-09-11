@@ -14,6 +14,9 @@ export class FormularioDto {
   readonly version_actual: boolean;
 
   @ApiProperty()
+  readonly periodo_id: number;
+
+  @ApiProperty()
   readonly creado_por_id: number;
 
   @ApiProperty()

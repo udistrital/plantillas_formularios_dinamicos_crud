@@ -17,6 +17,9 @@ export class Formulario extends Document {
   @Prop({ required: true })
   version_actual: boolean;
 
+  @Prop({ required: false })
+  periodo_id: number;
+
   @Prop({ required: true })
   creado_por_id: number;
 

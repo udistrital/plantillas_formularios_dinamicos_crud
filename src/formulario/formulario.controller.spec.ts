@@ -10,6 +10,7 @@ const mockFormularioDto: FormularioDto = {
   descripcion: 'Descripción del formulario 1',
   version: 1,
   version_actual: true,
+  periodo_id: 2,
   creado_por_id: 1,
   modificado_por_id: 2,
   modulo_id: 'modulo_id_1',

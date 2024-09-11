@@ -4,7 +4,6 @@ import { CampoService } from './campo.service';
 import { Campo } from './schemas/campo.schema';
 import { CampoDto } from './dto/campo.dto';
 import { Seccion } from '../seccion/schemas/seccion.schema';
-import { ElementoHtml } from '../elemento-html/schemas/elemento-html.schema';
 import { Model } from 'mongoose';
 import { FilterDto } from '../filters/filters.dto';
 
@@ -12,7 +11,7 @@ const mockCampoDto: CampoDto = {
   nombre: 'Campo',
   descripcion: 'Descripción del campo',
   seccion_id: '66aed6a431c4ca1c60085cdd',
-  elemento_html_id: '66aed6a431c4ca1c60085cde',
+  tipo: 'text',
   label: {},
   deshabilitado: false,
   solo_lectura: false,
@@ -44,7 +43,6 @@ describe('CampoService', () => {
   let campoService: CampoService;
   let campoModel: Model<Campo>;
   let seccionModel: Model<Seccion>;
-  let elementoHtmlModel: Model<ElementoHtml>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -65,12 +63,6 @@ describe('CampoService', () => {
             findById: jest.fn(),
           },
         },
-        {
-          provide: getModelToken(ElementoHtml.name),
-          useValue: {
-            findById: jest.fn(),
-          },
-        },
       ],
     }).compile();
 
@@ -81,9 +73,6 @@ describe('CampoService', () => {
       getModelToken(Campo.name),
     );
     seccionModel = module.get<Model<Seccion>>(getModelToken(Seccion.name));
-    elementoHtmlModel = module.get<Model<ElementoHtml>>(
-      getModelToken(ElementoHtml.name),
-    );
   });
 
   it('Debería estar definido', () => {
@@ -94,9 +83,6 @@ describe('CampoService', () => {
     it('Debería crear y devolver un campo', async () => {
       jest.spyOn(seccionModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(mockSeccion),
-      } as any);
-      jest.spyOn(elementoHtmlModel, 'findById').mockReturnValue({
-        exec: jest.fn().mockResolvedValue(mockElementoHtml),
       } as any);
       jest
         .spyOn(campoModel, 'create')
@@ -115,9 +101,6 @@ describe('CampoService', () => {
       jest.spyOn(seccionModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(null),
       } as any);
-      jest.spyOn(elementoHtmlModel, 'findById').mockReturnValue({
-        exec: jest.fn().mockResolvedValue(mockElementoHtml),
-      } as any);
 
       await expect(
         campoService.post(mockCampoDto),
@@ -126,20 +109,6 @@ describe('CampoService', () => {
       );
     });
 
-    it('Debería lanzar un error si el elemento HTML relacionado no existe', async () => {
-      jest.spyOn(seccionModel, 'findById').mockReturnValue({
-        exec: jest.fn().mockResolvedValue(mockSeccion),
-      } as any);
-      jest.spyOn(elementoHtmlModel, 'findById').mockReturnValue({
-        exec: jest.fn().mockResolvedValue(null),
-      } as any);
-
-      await expect(
-        campoService.post(mockCampoDto),
-      ).rejects.toThrow(
-        `Elemento-html with id ${mockCampoDto.elemento_html_id} doesn't exist`,
-      );
-    });
   });
 
   describe('getAll', () => {
@@ -224,9 +193,6 @@ describe('CampoService', () => {
       jest.spyOn(seccionModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(mockSeccion),
       } as any);
-      jest.spyOn(elementoHtmlModel, 'findById').mockReturnValue({
-        exec: jest.fn().mockResolvedValue(mockElementoHtml),
-      } as any);
       jest
         .spyOn(campoModel, 'findByIdAndUpdate')
         .mockReturnValue({
@@ -253,9 +219,6 @@ describe('CampoService', () => {
     it('Debería lanzar un error si el campo no existe', async () => {
       jest.spyOn(seccionModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(mockSeccion),
-      } as any);
-      jest.spyOn(elementoHtmlModel, 'findById').mockReturnValue({
-        exec: jest.fn().mockResolvedValue(mockElementoHtml),
       } as any);
       jest
         .spyOn(campoModel, 'findByIdAndUpdate')

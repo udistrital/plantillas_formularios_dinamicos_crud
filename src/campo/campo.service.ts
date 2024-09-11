@@ -7,7 +7,6 @@ import { CampoDto } from './dto/campo.dto';
 import { FilterDto } from '../filters/filters.dto';
 import { FiltersService } from '../filters/filters.service';
 import { Seccion } from '../seccion/schemas/seccion.schema';
-import { ElementoHtml } from '../elemento-html/schemas/elemento-html.schema';
 
 @Injectable()
 export class CampoService {
@@ -15,8 +14,6 @@ export class CampoService {
     @InjectModel(Campo.name)
     private readonly campoModel: Model<Campo>,
     @InjectModel(Seccion.name) private readonly seccionModel: Model<Seccion>,
-    @InjectModel(ElementoHtml.name)
-    private readonly elementoHtmlModel: Model<ElementoHtml>,
   ) {}
 
   private async checkRelated(
@@ -29,16 +26,6 @@ export class CampoService {
       if (!campo) {
         throw new Error(
           `Elemento-personalizado with id ${campoDto.seccion_id} doesn't exist`,
-        );
-      }
-    }
-    if (campoDto.elemento_html_id) {
-      const elementoHtml = await this.elementoHtmlModel
-        .findById(campoDto.elemento_html_id)
-        .exec();
-      if (!elementoHtml) {
-        throw new Error(
-          `Elemento-html with id ${campoDto.elemento_html_id} doesn't exist`,
         );
       }
     }

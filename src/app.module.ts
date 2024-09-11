@@ -10,7 +10,6 @@ import { ModuloModule } from './modulo/modulo.module';
 import { FormularioModule } from './formulario/formulario.module';
 import { ModalAlertaModule } from './modal-alerta/modal-alerta.module';
 import { SeccionModule } from './seccion/seccion.module';
-import { ElementoHtmlModule } from './elemento-html/elemento-html.module';
 import { CampoModule } from './campo/campo.module';
 import { PlantillaModule } from './plantilla/plantilla.module';
 
@@ -27,7 +26,6 @@ import { PlantillaModule } from './plantilla/plantilla.module';
     FormularioModule,
     ModalAlertaModule,
     SeccionModule,
-    ElementoHtmlModule,
     CampoModule,
     PlantillaModule,
   ],
