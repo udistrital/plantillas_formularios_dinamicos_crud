@@ -12,11 +12,13 @@ import { Campo } from 'src/campo/schemas/campo.schema';
 import { FormularioDto } from '../formulario/dto/formulario.dto';
 import { SeccionDto } from '../seccion/dto/seccion.dto';
 import { CampoDto } from 'src/campo/dto/campo.dto';
+import { FilterDto } from 'src/filters/filters.dto';
 
 // Services
 import { FormularioService } from '../formulario/formulario.service';
 import { SeccionService } from '../seccion/seccion.service';
 import { CampoService } from 'src/campo/campo.service';
+import { FiltersService } from 'src/filters/filters.service';
 
 @Injectable()
 export class PlantillaService {
@@ -31,7 +33,7 @@ export class PlantillaService {
     @InjectModel(Campo.name)
     private readonly campoModel: Model<Campo>,
     private readonly campoService: CampoService,
-  ) {}
+  ) { }
 
   async createTemplate(template: any): Promise<any> {
     if (typeof template !== 'object' || template === null) {
@@ -175,6 +177,43 @@ export class PlantillaService {
     );
 
     return { previousVersion, newVersion };
+  }
+
+
+  async getAllTemplate(filterDto: FilterDto): Promise<any> {
+    const filtersService = new FiltersService(filterDto);
+
+    let populateFields = [];
+    if (filtersService.isPopulated()) {
+      populateFields = this.populateFields();
+    }
+
+    // Contar el total de formularios
+    const registros = await this.formularioModel
+      .countDocuments(filtersService.getQuery())
+      .exec();
+
+    const formularios = await this.formularioModel
+      .find(
+        filtersService.getQuery(),
+        filtersService.getFields(),
+        filtersService.getLimitAndOffset(),
+      )
+      .select('modulo_id formulario_id periodo_id') 
+      .sort(filtersService.getSortBy())
+      .populate(populateFields)
+      .exec();
+
+    return {
+      metadata: {
+        registros, 
+      },
+      formularios, 
+    };
+  }
+
+  private populateFields(): any[] {
+    return [{ path: 'modulo_id' }];
   }
 
   async getTemplate(modulo_id: string, version?: number): Promise<any> {
@@ -334,7 +373,7 @@ export class PlantillaService {
     return responseMessage;
   }
 
-  private async disableFormulario(formularioId : ObjectId) {
+  private async disableFormulario(formularioId: ObjectId) {
     await this.formularioService.delete(formularioId.toString());
   }
 

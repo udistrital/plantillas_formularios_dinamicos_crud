@@ -911,22 +911,69 @@
         ]
       },
       "get": {
-        "operationId": "PlantillaController_get",
+        "operationId": "PlantillaController_getAll",
         "parameters": [
           {
-            "name": "modulo_id",
-            "required": true,
+            "name": "query",
+            "required": false,
             "in": "query",
+            "description": " query-Filter.e.g.col1:v1,col2:v2… ",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "version",
+            "name": "fields",
             "required": false,
             "in": "query",
+            "description": "fields - Fields returned. e.g. col1,col2 …",
             "schema": {
-              "type": "number"
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortby",
+            "required": false,
+            "in": "query",
+            "description": "sortby - Sorted-by fields. e.g. col1,col2 …",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "description": "order - Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc …",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "limit - Limit the size of result set. Must be an integer",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "offset - Start position of result set. Must be an integer",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "populate",
+            "required": false,
+            "in": "query",
+            "description": "populate - show subqueries. Must be a boolean",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -953,6 +1000,37 @@
           {
             "name": "version",
             "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "plantillas"
+        ]
+      }
+    },
+    "/plantillas/version": {
+      "get": {
+        "operationId": "PlantillaController_get",
+        "parameters": [
+          {
+            "name": "modulo_id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "required": false,
             "in": "query",
             "schema": {
               "type": "number"
