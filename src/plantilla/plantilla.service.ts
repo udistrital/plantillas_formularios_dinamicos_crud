@@ -199,7 +199,7 @@ export class PlantillaService {
         filtersService.getFields(),
         filtersService.getLimitAndOffset(),
       )
-      .select('modulo_id formulario_id periodo_id') 
+      .select('modulo_id formulario_id periodo_id version version_actual') 
       .sort(filtersService.getSortBy())
       .populate(populateFields)
       .exec();
