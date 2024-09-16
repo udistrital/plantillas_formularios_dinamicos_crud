@@ -11,7 +11,7 @@ export class CampoDto {
   readonly seccion_id: string;
 
   @ApiProperty()
-  readonly elemento_html_id: string;
+  readonly tipo: string;
 
   @ApiProperty()
   readonly label: object;

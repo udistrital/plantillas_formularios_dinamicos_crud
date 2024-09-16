@@ -7,17 +7,18 @@ import { Modulo } from '../modulo/schemas/modulo.schema';
 import { Formulario } from '../formulario/schemas/formulario.schema';
 import { Seccion } from '../seccion/schemas/seccion.schema';
 import { Campo } from 'src/campo/schemas/campo.schema';
-import { ElementoHtml } from '../elemento-html/schemas/elemento-html.schema';
 
 // DTOs
 import { FormularioDto } from '../formulario/dto/formulario.dto';
 import { SeccionDto } from '../seccion/dto/seccion.dto';
 import { CampoDto } from 'src/campo/dto/campo.dto';
+import { FilterDto } from 'src/filters/filters.dto';
 
 // Services
 import { FormularioService } from '../formulario/formulario.service';
 import { SeccionService } from '../seccion/seccion.service';
 import { CampoService } from 'src/campo/campo.service';
+import { FiltersService } from 'src/filters/filters.service';
 
 @Injectable()
 export class PlantillaService {
@@ -32,9 +33,7 @@ export class PlantillaService {
     @InjectModel(Campo.name)
     private readonly campoModel: Model<Campo>,
     private readonly campoService: CampoService,
-    @InjectModel(ElementoHtml.name)
-    private readonly elementoHtmlModel: Model<ElementoHtml>,
-  ) {}
+  ) { }
 
   async createTemplate(template: any): Promise<any> {
     if (typeof template !== 'object' || template === null) {
@@ -43,14 +42,12 @@ export class PlantillaService {
 
     const { modulo_id, formulario } = template;
     const seccionIds = [];
-    const elementoIds = [];
     let newFormulario: Formulario;
     let previousVersion: number | null = null;
 
     try {
-      // Encuentra el módulo y valida los elementos HTML
+      // Encuentra el módulo
       const modulo = await this.findModulo(modulo_id);
-      await this.validateElementosHtml(formulario.seccion);
 
       // Actualizar versiones anteriores y obtener la nueva versión
       const versionInfo = await this.updateExistingFormularios(modulo._id);
@@ -69,13 +66,7 @@ export class PlantillaService {
       newFormulario = await this.formularioService.post(formularioDto);
 
       // Crear secciones y campos
-      await this.createSections(
-        formulario.seccion,
-        newFormulario._id,
-        null,
-        seccionIds,
-        elementoIds,
-      );
+      await this.createSections(formulario.seccion, newFormulario._id, null, seccionIds);
 
       // Devuelve el mensaje de éxito
       return { message: 'Plantilla creada exitosamente', version: newVersion };
@@ -87,10 +78,6 @@ export class PlantillaService {
 
       if (seccionIds.length > 0) {
         await this.deleteSeccionesBD(seccionIds);
-      }
-
-      if (elementoIds.length > 0) {
-        await this.deleteCamposBD(elementoIds);
       }
 
       // Restaurar la versión anterior si se había establecido
@@ -119,48 +106,11 @@ export class PlantillaService {
     }
   }
 
-  // Función para eliminar campos por sus IDs
-  private async deleteCamposBD(elementoIds: Array<ObjectId>) {
-    if (elementoIds.length > 0) {
-      await this.campoModel.deleteMany({
-        _id: { $in: elementoIds },
-      });
-    }
-  }
-
-  private async validateElementosHtml(secciones: any[]) {
-    for (const seccionData of secciones) {
-      const { campo, seccion } = seccionData;
-
-      if (campo && campo.length > 0) {
-        for (const elementoData of campo) {
-          const { elemento_html_id } = elementoData;
-
-          // Validar existencia de elemento_html
-          const elementoHtml = await this.elementoHtmlModel
-            .findById(elemento_html_id)
-            .exec();
-          if (!elementoHtml) {
-            throw new NotFoundException(
-              `ElementoHtml con id ${elemento_html_id} no encontrado`,
-            );
-          }
-        }
-      }
-
-      // Validar sub-secciones recursivamente
-      if (seccion && seccion.length > 0) {
-        await this.validateElementosHtml(seccion);
-      }
-    }
-  }
-
   private async createSections(
     secciones: any[],
     formulario_id: Types.ObjectId,
     parent_id: Types.ObjectId | null,
     seccionIds: Types.ObjectId[],
-    elementoIds: Types.ObjectId[],
   ) {
     for (const seccionData of secciones) {
       const { campo, seccion } = seccionData;
@@ -175,42 +125,28 @@ export class PlantillaService {
 
       // Crear campos para esta sección
       if (campo && campo.length > 0) {
-        await this.createCampos(
-          campo,
-          newSeccion._id,
-          elementoIds,
-        );
+        await this.createCampos(campo, newSeccion._id);
       }
 
       // Crear sub-secciones recursivamente
       if (seccion && seccion.length > 0) {
-        await this.createSections(
-          seccion,
-          formulario_id,
-          newSeccion._id,
-          seccionIds,
-          elementoIds,
-        );
+        await this.createSections(seccion, formulario_id, newSeccion._id, seccionIds);
       }
     }
   }
 
   private async createCampos(
-    elementos: any[],
+    campos: any[],
     seccion_id: Types.ObjectId,
-    elementoIds: Types.ObjectId[],
   ) {
-    for (const elementoData of elementos) {
+    for (const camposData of campos) {
       const campoDto: CampoDto = {
-        ...elementoData,
+        ...camposData,
         activo: true,
         seccion_id,
-        elemento_html_id: elementoData.elemento_html_id,
       };
 
-      const newCampo =
-        await this.campoService.post(campoDto);
-      elementoIds.push(newCampo._id);
+      await this.campoService.post(campoDto);
     }
   }
 
@@ -243,6 +179,43 @@ export class PlantillaService {
     return { previousVersion, newVersion };
   }
 
+
+  async getAllTemplate(filterDto: FilterDto): Promise<any> {
+    const filtersService = new FiltersService(filterDto);
+
+    let populateFields = [];
+    if (filtersService.isPopulated()) {
+      populateFields = this.populateFields();
+    }
+
+    // Contar el total de formularios
+    const registros = await this.formularioModel
+      .countDocuments(filtersService.getQuery())
+      .exec();
+
+    const formularios = await this.formularioModel
+      .find(
+        filtersService.getQuery(),
+        filtersService.getFields(),
+        filtersService.getLimitAndOffset(),
+      )
+      .select('modulo_id formulario_id periodo_id version version_actual') 
+      .sort(filtersService.getSortBy())
+      .populate(populateFields)
+      .exec();
+
+    return {
+      metadata: {
+        registros, 
+      },
+      formularios, 
+    };
+  }
+
+  private populateFields(): any[] {
+    return [{ path: 'modulo_id' }];
+  }
+
   async getTemplate(modulo_id: string, version?: number): Promise<any> {
     // Convertir modulo_id a ObjectId si es válido
     const moduloIdQuery = Types.ObjectId.isValid(modulo_id)
@@ -269,10 +242,9 @@ export class PlantillaService {
       .find({ formulario_id: formulario._id })
       .exec();
 
-    // Obtener los campos de cada sección con populate de elemento_html_id
+    // Obtener los campos de cada sección
     const campos = await this.campoModel
       .find({ seccion_id: { $in: secciones.map((seccion) => seccion._id) } })
-      .populate('elemento_html_id')
       .exec();
 
     // Construir la estructura jerárquica
@@ -291,8 +263,8 @@ export class PlantillaService {
           _id: campo._id,
           nombre: campo.nombre,
           descripcion: campo.descripcion,
-          elemento_html: campo.elemento_html_id, // Elemento HTML poblado
           label: campo.label,
+          tipo: campo.tipo,
           deshabilitado: campo.deshabilitado,
           solo_lectura: campo.solo_lectura,
           validaciones: campo.validaciones,
@@ -325,6 +297,7 @@ export class PlantillaService {
         nombre: formulario.nombre,
         descripcion: formulario.descripcion,
         version: formulario.version,
+        periodo_id: formulario.periodo_id,
         creado_por_id: formulario.creado_por_id,
         traduccion: formulario.traduccion,
         label: formulario.label,
@@ -341,7 +314,7 @@ export class PlantillaService {
     return formularioJson;
   }
 
-  //Realiza la eliminacion logica de todos los elementos relacionados a una plantilla
+  // Realiza la eliminacion logica de todos los elementos relacionados a una plantilla
   async deleteTemplate(modulo_id: string, version: number): Promise<string> {
     // Encontrar el formulario a eliminar basado en el modulo_id y la versión
     const formulario = await this.formularioModel
@@ -400,7 +373,7 @@ export class PlantillaService {
     return responseMessage;
   }
 
-  private async disableFormulario(formularioId : ObjectId) {
+  private async disableFormulario(formularioId: ObjectId) {
     await this.formularioService.delete(formularioId.toString());
   }
 

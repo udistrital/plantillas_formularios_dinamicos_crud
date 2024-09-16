@@ -9,7 +9,7 @@ const mockCampoDto: CampoDto = {
   nombre: 'Campo',
   descripcion: 'Descripción del Campo',
   seccion_id: '66aed6a431c4ca1c60085cdd',
-  elemento_html_id: '66aed6a431c4ca1c60085cde',
+  tipo: 'text',
   label: {},
   deshabilitado: false,
   solo_lectura: false,

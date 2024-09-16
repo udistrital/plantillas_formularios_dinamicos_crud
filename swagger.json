@@ -712,181 +712,6 @@
         ]
       }
     },
-    "/elementos-html": {
-      "post": {
-        "operationId": "ElementoHtmlController_post",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ElementoHtmlDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "elementos-html"
-        ]
-      },
-      "get": {
-        "operationId": "ElementoHtmlController_getAll",
-        "parameters": [
-          {
-            "name": "query",
-            "required": false,
-            "in": "query",
-            "description": " query-Filter.e.g.col1:v1,col2:v2… ",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "fields",
-            "required": false,
-            "in": "query",
-            "description": "fields - Fields returned. e.g. col1,col2 …",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortby",
-            "required": false,
-            "in": "query",
-            "description": "sortby - Sorted-by fields. e.g. col1,col2 …",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "order",
-            "required": false,
-            "in": "query",
-            "description": "order - Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc …",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "limit - Limit the size of result set. Must be an integer",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "offset",
-            "required": false,
-            "in": "query",
-            "description": "offset - Start position of result set. Must be an integer",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "populate",
-            "required": false,
-            "in": "query",
-            "description": "populate - show subqueries. Must be a boolean",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "elementos-html"
-        ]
-      }
-    },
-    "/elementos-html/{id}": {
-      "get": {
-        "operationId": "ElementoHtmlController_getById",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "elementos-html"
-        ]
-      },
-      "put": {
-        "operationId": "ElementoHtmlController_put",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ElementoHtmlDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "elementos-html"
-        ]
-      },
-      "delete": {
-        "operationId": "ElementoHtmlController_delete",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "elementos-html"
-        ]
-      }
-    },
     "/campos": {
       "post": {
         "operationId": "CampoController_post",
@@ -1086,22 +911,69 @@
         ]
       },
       "get": {
-        "operationId": "PlantillaController_get",
+        "operationId": "PlantillaController_getAll",
         "parameters": [
           {
-            "name": "modulo_id",
-            "required": true,
+            "name": "query",
+            "required": false,
             "in": "query",
+            "description": " query-Filter.e.g.col1:v1,col2:v2… ",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "version",
+            "name": "fields",
             "required": false,
             "in": "query",
+            "description": "fields - Fields returned. e.g. col1,col2 …",
             "schema": {
-              "type": "number"
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortby",
+            "required": false,
+            "in": "query",
+            "description": "sortby - Sorted-by fields. e.g. col1,col2 …",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "description": "order - Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc …",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "limit - Limit the size of result set. Must be an integer",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "offset - Start position of result set. Must be an integer",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "populate",
+            "required": false,
+            "in": "query",
+            "description": "populate - show subqueries. Must be a boolean",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -1128,6 +1000,37 @@
           {
             "name": "version",
             "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "plantillas"
+        ]
+      }
+    },
+    "/plantillas/version": {
+      "get": {
+        "operationId": "PlantillaController_get",
+        "parameters": [
+          {
+            "name": "modulo_id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "required": false,
             "in": "query",
             "schema": {
               "type": "number"
@@ -1203,6 +1106,9 @@
           "version_actual": {
             "type": "boolean"
           },
+          "periodo_id": {
+            "type": "number"
+          },
           "creado_por_id": {
             "type": "number"
           },
@@ -1235,6 +1141,7 @@
           "descripcion",
           "version",
           "version_actual",
+          "periodo_id",
           "creado_por_id",
           "modificado_por_id",
           "modulo_id",
@@ -1331,51 +1238,6 @@
           "fecha_modificacion"
         ]
       },
-      "ElementoHtmlDto": {
-        "type": "object",
-        "properties": {
-          "nombre": {
-            "type": "string"
-          },
-          "descripcion": {
-            "type": "string"
-          },
-          "tipo_id": {
-            "type": "number"
-          },
-          "tipo_dato_id": {
-            "type": "number"
-          },
-          "validadores": {
-            "type": "object"
-          },
-          "parametros": {
-            "type": "object"
-          },
-          "activo": {
-            "type": "boolean"
-          },
-          "fecha_creacion": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "fecha_modificacion": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "nombre",
-          "descripcion",
-          "tipo_id",
-          "tipo_dato_id",
-          "validadores",
-          "parametros",
-          "activo",
-          "fecha_creacion",
-          "fecha_modificacion"
-        ]
-      },
       "CampoDto": {
         "type": "object",
         "properties": {
@@ -1388,7 +1250,7 @@
           "seccion_id": {
             "type": "string"
           },
-          "elemento_html_id": {
+          "tipo": {
             "type": "string"
           },
           "label": {
@@ -1428,7 +1290,7 @@
           "nombre",
           "descripcion",
           "seccion_id",
-          "elemento_html_id",
+          "tipo",
           "label",
           "deshabilitado",
           "solo_lectura",

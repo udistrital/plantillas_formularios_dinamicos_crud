@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { PlantillaService } from './plantilla.service';
+import { FilterDto } from 'src/filters/filters.dto';
 
 @ApiTags('plantillas')
 @Controller('plantillas')
@@ -39,6 +40,28 @@ export class PlantillaController {
   }
 
   @Get()
+  async getAll(@Res() res, @Query() filterDto: FilterDto) {
+    try {
+      const result = await this.plantillaService.getAllTemplate(filterDto);
+      res.status(HttpStatus.OK).json({
+        Success: true,
+        Status: HttpStatus.OK,
+        Message: 'Request successful',
+        Metadata: result.metadata,
+        Data: result.formularios,
+      });
+    } catch (error) {
+      res.status(HttpStatus.NOT_FOUND).json({
+        Success: false,
+        Status: HttpStatus.NOT_FOUND,
+        Message:
+          'Error service GetAll: The request contains an incorrect parameter or no record exist',
+        Data: error.message,
+      });
+    }
+  }
+
+  @Get('/version')
   @ApiQuery({ name: 'modulo_id', required: true, type: String })
   @ApiQuery({ name: 'version', required: false, type: Number })
   async get(

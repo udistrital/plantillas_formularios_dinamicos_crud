@@ -15,10 +15,6 @@ import {
   Campo,
   CampoSchema,
 } from '../campo/schemas/campo.schema';
-import {
-  ElementoHtml,
-  ElementoHtmlSchema,
-} from '../elemento-html/schemas/elemento-html.schema';
 
 @Module({
   imports: [
@@ -27,7 +23,6 @@ import {
       { name: Formulario.name, schema: FormularioSchema },
       { name: Seccion.name, schema: SeccionSchema },
       { name: Campo.name, schema: CampoSchema },
-      { name: ElementoHtml.name, schema: ElementoHtmlSchema },
     ]),
     FormularioModule,
     SeccionModule,
