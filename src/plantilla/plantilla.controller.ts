@@ -61,7 +61,7 @@ export class PlantillaController {
     }
   }
 
-  @Get('/version')
+  @Get('/versiones')
   @ApiQuery({ name: 'modulo_id', required: true, type: String })
   @ApiQuery({ name: 'version', required: false, type: Number })
   async get(
