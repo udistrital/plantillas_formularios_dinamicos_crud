@@ -20,6 +20,9 @@ export class Seccion extends Document {
   @Prop({ type: Object, required: false })
   label: object;
 
+  @Prop({ required: false })
+  icono: string;
+
   @Prop({ required: true })
   activo: boolean;
 

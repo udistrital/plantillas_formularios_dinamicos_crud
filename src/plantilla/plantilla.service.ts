@@ -263,7 +263,7 @@ export class PlantillaService {
           _id: campo._id,
           nombre: campo.nombre,
           descripcion: campo.descripcion,
-          label: campo.label,
+          etiqueta: campo.label,
           tipo: campo.tipo,
           deshabilitado: campo.deshabilitado,
           solo_lectura: campo.solo_lectura,
@@ -281,12 +281,13 @@ export class PlantillaService {
         _id: seccion._id,
         nombre: seccion.nombre,
         descripcion: seccion.descripcion,
-        label: seccion.label,
+        etiqueta: seccion.label,
+        icono: seccion.icono,
         activo: seccion.activo,
         fecha_creacion: seccion.fecha_creacion,
         fecha_modificacion: seccion.fecha_modificacion,
-        ...(elementos.length > 0 && { campo: elementos }),
-        ...(subSecciones.length > 0 && { seccion: subSecciones }),
+        ...(elementos.length > 0 && { campos: elementos }),
+        ...(subSecciones.length > 0 && { secciones: subSecciones }),
       };
     };
 
@@ -300,11 +301,11 @@ export class PlantillaService {
         periodo_id: formulario.periodo_id,
         creado_por_id: formulario.creado_por_id,
         traduccion: formulario.traduccion,
-        label: formulario.label,
+        etiqueta: formulario.label,
         activo: formulario.activo,
         fecha_creacion: formulario.fecha_creacion,
         fecha_modificacion: formulario.fecha_modificacion,
-        seccion: secciones
+        secciones: secciones
           .filter((seccion) => !seccion.padre_id) // Filtrar secciones sin padre
           .map((seccion) => buildHierarchy(seccion._id.toString()))
           .filter((seccion) => seccion !== null),
