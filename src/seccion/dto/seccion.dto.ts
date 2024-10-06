@@ -17,6 +17,9 @@ export class SeccionDto {
   readonly label: object;
 
   @ApiProperty()
+  readonly icono: string;
+
+  @ApiProperty()
   activo: boolean;
 
   @ApiProperty()

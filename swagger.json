@@ -1215,6 +1215,9 @@
           "label": {
             "type": "object"
           },
+          "icono": {
+            "type": "string"
+          },
           "activo": {
             "type": "boolean"
           },
@@ -1233,6 +1236,7 @@
           "formulario_id",
           "padre_id",
           "label",
+          "icono",
           "activo",
           "fecha_creacion",
           "fecha_modificacion"
