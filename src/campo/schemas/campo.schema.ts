@@ -29,11 +29,11 @@ export class Campo extends Document {
   @Prop({ type: Object, required: false })
   placeholder: object;
 
-  @Prop({ type: Object, required: false })
-  validaciones: object;
+  @Prop({ type: [Object], required: false })
+  validacion: object[];
 
   @Prop({ type: Object, required: false })
-  parametros: object;
+  parametro: object;
 
   @Prop({ type: Object, required: false })
   dependencia: object;

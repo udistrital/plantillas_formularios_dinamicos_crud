@@ -144,6 +144,8 @@ export class PlantillaService {
         ...camposData,
         activo: true,
         seccion_id,
+        validacion: camposData.validaciones || camposData.validacion || [],
+        parametro: camposData.parametros || camposData.parametro || {}
       };
 
       await this.campoService.post(campoDto);
@@ -267,8 +269,8 @@ export class PlantillaService {
           tipo: campo.tipo,
           deshabilitado: campo.deshabilitado,
           solo_lectura: campo.solo_lectura,
-          validaciones: campo.validaciones,
-          parametros: campo.parametros,
+          validaciones: campo.validacion,
+          parametros: campo.parametro, 	
           dependencia: campo.dependencia,
         }));
 

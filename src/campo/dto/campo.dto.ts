@@ -26,10 +26,10 @@ export class CampoDto {
   readonly placeholder: object;
 
   @ApiProperty()
-  readonly validaciones: object;
+  readonly validacion: object[];
 
   @ApiProperty()
-  readonly parametros: object;
+  readonly parametro: object;
 
   @ApiProperty()
   readonly dependencia: object;

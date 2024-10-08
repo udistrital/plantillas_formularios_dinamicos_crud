@@ -1269,10 +1269,13 @@
           "placeholder": {
             "type": "object"
           },
-          "validaciones": {
-            "type": "object"
+          "validacion": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
           },
-          "parametros": {
+          "parametro": {
             "type": "object"
           },
           "dependencia": {
@@ -1299,8 +1302,8 @@
           "deshabilitado",
           "solo_lectura",
           "placeholder",
-          "validaciones",
-          "parametros",
+          "validacion",
+          "parametro",
           "dependencia",
           "activo",
           "fecha_creacion",
