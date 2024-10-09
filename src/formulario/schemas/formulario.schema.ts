@@ -33,7 +33,7 @@ export class Formulario extends Document {
   traduccion: boolean;
 
   @Prop({ type: Object, required: false })
-  label: object;
+  etiqueta: object;
 
   @Prop({ required: true })
   activo: boolean;

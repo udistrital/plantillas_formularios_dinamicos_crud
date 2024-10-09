@@ -18,7 +18,10 @@ export class Campo extends Document {
   tipo: string;
 
   @Prop({ type: Object, required: true })
-  label: object;
+  etiqueta: object;
+
+  @Prop({ required: false })
+  valor: string;
 
   @Prop({ required: true })
   deshabilitado: boolean;
@@ -37,6 +40,18 @@ export class Campo extends Document {
 
   @Prop({ type: Object, required: false })
   dependencia: object;
+
+  @Prop({ required: false })
+  servicio: string;
+
+  @Prop({ required: false })
+  endpoint: string;
+
+  @Prop({ required: false })
+  campo: string;
+  
+  @Prop({ required: false })
+  agrupado: boolean;
 
   @Prop({ required: true })
   activo: boolean;

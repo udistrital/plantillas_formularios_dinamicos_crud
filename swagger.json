@@ -1121,7 +1121,7 @@
           "traduccion": {
             "type": "boolean"
           },
-          "label": {
+          "etiqueta": {
             "type": "object"
           },
           "activo": {
@@ -1146,7 +1146,7 @@
           "modificado_por_id",
           "modulo_id",
           "traduccion",
-          "label",
+          "etiqueta",
           "activo",
           "fecha_creacion",
           "fecha_modificacion"
@@ -1212,7 +1212,7 @@
           "padre_id": {
             "type": "string"
           },
-          "label": {
+          "etiqueta": {
             "type": "object"
           },
           "icono": {
@@ -1235,7 +1235,7 @@
           "descripcion",
           "formulario_id",
           "padre_id",
-          "label",
+          "etiqueta",
           "icono",
           "activo",
           "fecha_creacion",
@@ -1257,8 +1257,11 @@
           "tipo": {
             "type": "string"
           },
-          "label": {
+          "etiqueta": {
             "type": "object"
+          },
+          "valor": {
+            "type": "string"
           },
           "deshabilitado": {
             "type": "boolean"
@@ -1281,6 +1284,18 @@
           "dependencia": {
             "type": "object"
           },
+          "servicio": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "campo": {
+            "type": "string"
+          },
+          "agrupado": {
+            "type": "boolean"
+          },
           "activo": {
             "type": "boolean"
           },
@@ -1298,13 +1313,18 @@
           "descripcion",
           "seccion_id",
           "tipo",
-          "label",
+          "etiqueta",
+          "valor",
           "deshabilitado",
           "solo_lectura",
           "placeholder",
           "validacion",
           "parametro",
           "dependencia",
+          "servicio",
+          "endpoint",
+          "campo",
+          "agrupado",
           "activo",
           "fecha_creacion",
           "fecha_modificacion"

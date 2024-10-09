@@ -15,7 +15,7 @@ const mockFormularioDto: FormularioDto = {
   modificado_por_id: 2,
   modulo_id: 'modulo_id_1',
   traduccion: true,
-  label: {},
+  etiqueta: {},
   activo: true,
   fecha_creacion: new Date(),
   fecha_modificacion: new Date(),
