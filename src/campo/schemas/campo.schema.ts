@@ -26,7 +26,7 @@ export class Campo extends Document {
   @Prop({ required: true })
   deshabilitado: boolean;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   solo_lectura: boolean;
 
   @Prop({ type: Object, required: false })

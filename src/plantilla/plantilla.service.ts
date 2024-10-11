@@ -66,7 +66,7 @@ export class PlantillaService {
       newFormulario = await this.formularioService.post(formularioDto);
 
       // Crear secciones y campos
-      await this.createSections(formulario.seccion, newFormulario._id, null, seccionIds);
+      await this.createSections(formulario.secciones, newFormulario._id, null, seccionIds);
 
       // Devuelve el mensaje de éxito
       return { message: 'Plantilla creada exitosamente', version: newVersion };
@@ -113,7 +113,7 @@ export class PlantillaService {
     seccionIds: Types.ObjectId[],
   ) {
     for (const seccionData of secciones) {
-      const { campo, seccion } = seccionData;
+      const { campos, seccion } = seccionData;
       const seccionDto: SeccionDto = {
         ...seccionData,
         activo: true,
@@ -124,8 +124,8 @@ export class PlantillaService {
       seccionIds.push(newSeccion._id);
 
       // Crear campos para esta sección
-      if (campo && campo.length > 0) {
-        await this.createCampos(campo, newSeccion._id);
+      if (campos && campos.length > 0) {
+        await this.createCampos(campos, newSeccion._id);
       }
 
       // Crear sub-secciones recursivamente
