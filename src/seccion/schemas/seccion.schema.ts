@@ -18,7 +18,7 @@ export class Seccion extends Document {
   padre_id: Seccion | Types.ObjectId;
 
   @Prop({ type: Object, required: false })
-  label: object;
+  etiqueta: object;
 
   @Prop({ required: false })
   icono: string;

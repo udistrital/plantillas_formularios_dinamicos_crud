@@ -18,25 +18,40 @@ export class Campo extends Document {
   tipo: string;
 
   @Prop({ type: Object, required: true })
-  label: object;
+  etiqueta: object;
+
+  @Prop({ required: false })
+  valor: string;
 
   @Prop({ required: true })
   deshabilitado: boolean;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   solo_lectura: boolean;
 
   @Prop({ type: Object, required: false })
   placeholder: object;
 
-  @Prop({ type: Object, required: false })
-  validaciones: object;
+  @Prop({ type: [Object], required: false })
+  validacion: object[];
 
   @Prop({ type: Object, required: false })
-  parametros: object;
+  parametro: object;
 
   @Prop({ type: Object, required: false })
   dependencia: object;
+
+  @Prop({ required: false })
+  servicio: string;
+
+  @Prop({ required: false })
+  endpoint: string;
+
+  @Prop({ required: false })
+  campo: string;
+  
+  @Prop({ required: false })
+  agrupado: boolean;
 
   @Prop({ required: true })
   activo: boolean;

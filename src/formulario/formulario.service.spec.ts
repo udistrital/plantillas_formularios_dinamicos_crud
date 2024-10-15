@@ -18,8 +18,8 @@ const mockFormularioDto: FormularioDto = {
   modificado_por_id: 3,
   modulo_id: '66aed6a431c4ca1c60085cdd',
   traduccion: true,
-  label: {
-    nombre: 'nombre del label',
+  etiqueta: {
+    nombre: 'nombre de la etiqueta',
   },
   activo: true,
   fecha_creacion: new Date(),

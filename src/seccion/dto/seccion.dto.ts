@@ -14,7 +14,7 @@ export class SeccionDto {
   readonly padre_id: string;
 
   @ApiProperty()
-  readonly label: object;
+  readonly etiqueta: object;
 
   @ApiProperty()
   readonly icono: string;

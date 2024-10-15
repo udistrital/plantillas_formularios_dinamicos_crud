@@ -29,7 +29,7 @@ export class FormularioDto {
   readonly traduccion: boolean;
 
   @ApiProperty()
-  readonly label: object;
+  readonly etiqueta: object;
 
   @ApiProperty()
   activo: boolean;

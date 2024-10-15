@@ -66,7 +66,7 @@ export class PlantillaService {
       newFormulario = await this.formularioService.post(formularioDto);
 
       // Crear secciones y campos
-      await this.createSections(formulario.seccion, newFormulario._id, null, seccionIds);
+      await this.createSections(formulario.secciones, newFormulario._id, null, seccionIds);
 
       // Devuelve el mensaje de éxito
       return { message: 'Plantilla creada exitosamente', version: newVersion };
@@ -113,7 +113,7 @@ export class PlantillaService {
     seccionIds: Types.ObjectId[],
   ) {
     for (const seccionData of secciones) {
-      const { campo, seccion } = seccionData;
+      const { campos, seccion } = seccionData;
       const seccionDto: SeccionDto = {
         ...seccionData,
         activo: true,
@@ -124,8 +124,8 @@ export class PlantillaService {
       seccionIds.push(newSeccion._id);
 
       // Crear campos para esta sección
-      if (campo && campo.length > 0) {
-        await this.createCampos(campo, newSeccion._id);
+      if (campos && campos.length > 0) {
+        await this.createCampos(campos, newSeccion._id);
       }
 
       // Crear sub-secciones recursivamente
@@ -144,6 +144,8 @@ export class PlantillaService {
         ...camposData,
         activo: true,
         seccion_id,
+        validacion: camposData.validaciones || camposData.validacion || [],
+        parametro: camposData.parametros || camposData.parametro || {}
       };
 
       await this.campoService.post(campoDto);
@@ -263,13 +265,18 @@ export class PlantillaService {
           _id: campo._id,
           nombre: campo.nombre,
           descripcion: campo.descripcion,
-          etiqueta: campo.label,
+          etiqueta: campo.etiqueta,
+          valor: campo.valor,
           tipo: campo.tipo,
           deshabilitado: campo.deshabilitado,
           solo_lectura: campo.solo_lectura,
-          validaciones: campo.validaciones,
-          parametros: campo.parametros,
+          validaciones: campo.validacion,
+          parametros: campo.parametro, 	
           dependencia: campo.dependencia,
+          servicio: campo.servicio,
+          endpoint: campo.endpoint,
+          campo: campo.campo,
+          agrupado: campo.agrupado
         }));
 
       const subSecciones = secciones
@@ -281,7 +288,7 @@ export class PlantillaService {
         _id: seccion._id,
         nombre: seccion.nombre,
         descripcion: seccion.descripcion,
-        etiqueta: seccion.label,
+        etiqueta: seccion.etiqueta,
         icono: seccion.icono,
         activo: seccion.activo,
         fecha_creacion: seccion.fecha_creacion,
@@ -301,7 +308,7 @@ export class PlantillaService {
         periodo_id: formulario.periodo_id,
         creado_por_id: formulario.creado_por_id,
         traduccion: formulario.traduccion,
-        etiqueta: formulario.label,
+        etiqueta: formulario.etiqueta,
         activo: formulario.activo,
         fecha_creacion: formulario.fecha_creacion,
         fecha_modificacion: formulario.fecha_modificacion,

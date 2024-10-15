@@ -12,7 +12,7 @@ const mockSeccionDto: SeccionDto = {
   descripcion: 'Descripción de la sección de prueba',
   formulario_id: '66aed6a431c4ca1c60085cdd',
   padre_id: '66aed6a431c4ca1c60085cde',
-  label: {},
+  etiqueta: {},
   icono: 'home',
   activo: true,
   fecha_creacion: new Date(),

@@ -66,7 +66,7 @@ npm test:cov
 
 # Modelo de Datos
 
-![Modelo de datos Formularios dinámicos](/database/Modelo_de_datos_formularios_dinámicos_v7.png)
+![Modelo de datos Formularios dinámicos](/database/Modelo_de_datos_formularios_dinámicos_v11.png)
 
 # Licencia
 

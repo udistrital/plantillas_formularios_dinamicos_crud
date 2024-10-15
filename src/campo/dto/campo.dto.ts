@@ -14,7 +14,10 @@ export class CampoDto {
   readonly tipo: string;
 
   @ApiProperty()
-  readonly label: object;
+  readonly etiqueta : object;
+
+  @ApiProperty()
+  readonly valor: string;
 
   @ApiProperty()
   readonly deshabilitado: boolean;
@@ -26,13 +29,25 @@ export class CampoDto {
   readonly placeholder: object;
 
   @ApiProperty()
-  readonly validaciones: object;
+  readonly validacion: object[];
 
   @ApiProperty()
-  readonly parametros: object;
+  readonly parametro: object;
 
   @ApiProperty()
   readonly dependencia: object;
+
+  @ApiProperty()
+  readonly servicio: string;
+
+  @ApiProperty()
+  readonly endpoint: string;
+
+  @ApiProperty()
+  readonly campo: string;
+  
+  @ApiProperty()
+  readonly agrupado: boolean;
 
   @ApiProperty()
   activo: boolean;
